@@ -4,9 +4,9 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Doctrine 2 ORM and Zend Framework 2 tutorial</title>
+		<title>Proxy Pattern applied to PHP</title>
 
-		<meta name="description" content="A tutorial about integrating Doctrine2 with ZF2 through DoctrineModule">
+		<meta name="description" content="An introduction to the Proxy Pattern, its usages and its implementation in the PHP world">
 		<meta name="author" content="Marco Pivetta">
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
@@ -34,6 +34,14 @@
                 box-shadow: 0 0 #000;
             }
 
+            .php-color {
+                color: #6C7EB7;
+            }
+
+            .proxy-color {
+                color: #FC6A31;
+            }
+
             .zf-color {
                 color: #68B604;
             }
@@ -46,42 +54,19 @@
 	</head>
 
 	<body>
-
 		<div class="reveal">
-
-			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 
                 <section>
                     <h1>
-                        <span class="doctrine-color">Doctrine 2</span>
-                        &amp;
-                        <span class="zf-color">ZF2</span>
-                    </h1>
-                    <h1>
-                        <img
-                            src="assets/img/doctrine.svg"
-                            alt="Doctrine 2 ORM" border="0"
-                            height="200px"
-                            style="margin-bottom: -50px; "
-                        />
-                        +
-                        <img
-                            src="assets/img/zf-logo-large.png"
-                            alt="Zend Framework 2"
-                            border="0"
-                            height="200px"
-                            style="margin-bottom: -50px;"
-                        />
+                        <span class="proxy-color">Proxy Pattern</span>
+                        <br/>
+                        in <span class="php-color" style="font-size: 120%;">PHP</span>
                     </h1>
                 </section>
 				<section>
 					<h2>
-                        <img
-                            src="assets/img/ocramius.gif"
-                            alt="Marco Pivetta"
-                            style="width: 50px"
-                        />
+                        <img src="assets/img/ocramius.gif" alt="Marco Pivetta" style="width: 50px"/>
                         Marco Pivetta
                     </h2>
 					<p>
@@ -93,7 +78,7 @@
                                 <span class="zf-color">Zf2</span> contributor
                             </li>
                             <li>
-                                <span class="zf-color">Modules</span> developer
+                                Wasting time on:
                                 <ul>
                                     <li>OcraDiCompiler</li>
                                     <li>OcraServiceManager</li>
@@ -101,6 +86,9 @@
                                     <li>DoctrineModule</li>
                                     <li>DoctrineORMModule</li>
                                     <li>DoctrineMongoODMModule</li>
+                                    <li>ZeffMu</li>
+                                    <li>AssetManager</li>
+                                    <li>KJSencha</li>
                                 </ul>
                             </li>
                         </ul>
@@ -114,338 +102,410 @@
 				</section>
 
                 <section>
-                    <h2>What is <span class="doctrine-color">Doctrine ORM</span>?</h2>
+                    <h2>What is the <span class="proxy-color">Proxy Pattern</span>?</h2>
                     <p>
-                        <span class="doctrine-color">Doctrine ORM</span> is an Object Relational Mapper
-                        inspired by Hibernate and <abbr title="Java Persistece API">JPA</abbr>
-                        (JSR-317) from the Java community.
-                    </p>
-                    <p>
-                        It is based on a powerful
-                        <abbr title="Database Abstraction Layer" class="doctrine-color">DBAL</abbr>
-                        (DataBase Abstraction Layer) and allows
-                        developers to save and load <abbr title="Plain Old PHP Object">POPO</abbr>
-                        (Plain Old PHP Objects) from an SQL database.
+                        A proxy is generally an object whose interface is a layer between us and a different object
+                        with the same interface.
                     </p>
 
                     <aside class="notes">
-                        Also explain about multiple platforms.
+                        A proxy, in its most general form, is a class functioning as an interface to something else.
+                        <br/>
+                        This allows us, due to the Liskov Substitution Principle, to use it anywhere the other object
+                        is required.
                     </aside>
                 </section>
 
                 <section>
                     <p>
-                        Simple put:
+                        <img
+                            alt="Proxy Pattern UML"
+                            src="http://yuml.me/diagram/class/[CustomerProxy|+doStuff()]<-.- uses[CRMApplication],[CustomerInterface|+doStuff()]^-.-implements[Customer|+doStuff()],[Customer|+doStuff()]<-.- uses[CustomerProxy|+doStuff(){bg:orange}],[CustomerInterface|+doStuff()]^implements-.-[CustomerProxy|+doStuff(){bg:orange}]"
+                        />
                     </p>
-                    <h2 class="doctrine-color">Forget the database!</h2>
                 </section>
 
                 <section>
-                    <section>
-                        <h2>Examples using the <span class="doctrine-color">ORM</span></h2>
-                    </section>
+                    <p>Simplified, in <span class="php-color">PHP</span></p>
+                    <p>
 
-                    <section>
-                        <h3>The User <span class="doctrine-color">Entity</span></h3>
-                        <pre><code contenteditable>/** @ORM\Entity */
-class User {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @ORM\Column(type="integer")
-     */
-    protected $id;
+                        <img
+                            alt="Proxy Pattern PHP (simplified)"
+                            src="http://yuml.me/diagram/class/[CustomerProxy|+doStuff()]<-.- uses[CRMApplication],[Customer|+doStuff()]^- extends[CustomerProxy|+doStuff(){bg:orange}]"
+                        />
+                    </p>
+                    <p>
+                        Even if we're not implementing an interface, the interface of
+                        <code class="proxy-color">CustomerProxy</code>
+                        is the same as the one of <code>Customer</code>
+                    </p>
+                </section>
 
-    /** @ORM\Column(type="string") */
-    protected $fullName;
+                <section>
+                    <h2>When to use a <span class="php-color">Proxy</span></h2>
+                    <ul>
+                        <li>Lazy loading</li>
+                        <li>Remote objects</li>
+                        <li>Smart reference/Weak reference</li>
+                        <li>Protection</li>
+                        <li>AOP</li>
+                        <li>Null object fallback</li>
+                    </ul>
+                </section>
 
-    // getters/setters
-}</code></pre>
+                <section>
+                    <h2><span class="proxy-color">Lazy Loading</span></h2>
+                    <p>
+                        We may want to use lazy loading to avoid <abbr title="Input/Output">IO</abbr> operations
+                        or heavy loading operation until really needed
+                    </p>
+                </section>
 
-                    </section>
-
-                    <section>
-                        <h3><span class="doctrine-color">Persisting</span> an object</h3>
-                        <pre><code contenteditable>$em = EntityManager::create(/* not your problem */);
-
-$user = new User();
-$user->setFullName('Marco Pivetta');
-
-$em->persist($user); // status of $user1 is now "<span class="doctrine-color">managed</span>"
-$em->flush(); // commit changes to db
-
-var_dump($user1->getId()); // 1</code></pre>
-                    </section>
-                    <section>
-                        <h3><span class="doctrine-color">Persisting</span> multiple objects</h3>
-                        <pre><code contenteditable>$user1 = new User();
-$user1->setFullName('Marco Pivetta');
-$em->persist($user1);
-
-$user2 = new User();
-$user2->setFullName('Michaël Gallego');
-$em->persist($user2);
-
-$user3 = new User();
-$user3->setFullName('Kyle Spraggs');
-$em->persist($user3);
-
-$em->flush();</code></pre>
-                    </section>
-                    <section>
-                        <h3>Retrieving an object</h3>
-                        <pre><code contenteditable>$user1 = $em->find('User', 1);
-
-var_dump($user1->getFullName()); // Marco Pivetta
-
-$user2 = $em
-    ->getRepository('User')
-    ->findOneBy(array('fullName' => 'Michaël Gallego'));
-
-var_dump($user2->getFullName()); // Michaël Gallego</code></pre>
-                    </section>
-                    <section>
-                        <h3>Updating an object</h3>
-                        <pre><code contenteditable>$user = $em->find('User', 1);
-
-$user->setFullName('Guilherme Blanco');
-
-$em->flush();</code></pre>
-                    </section>
-                    <section>
-                        <h3>Deleting an object</h3>
-                        <pre><code contenteditable>$user = $em->find('User', 1);
-
-$em->remove($user);
-
-$em->flush();</code></pre>
-                        </section>
-                        <section>
-                            <h3><span class="doctrine-color">Associations</span> - User</h3>
-                        <pre><code contenteditable>/** @ORM\Entity */
-class User {
-    // like before
-
-    /** @ORM\ManyToOne(targetEntity="Address") */
-    protected $address;
-
-    /** @ORM\ManyToMany(targetEntity="Projects") */
-    protected $projects;
-
-    public function __construct()
-    {
-        $this->projects = new ArrayCollection();
+                <section>
+                    <h2><span class="proxy-color">Lazy Loading</span> example (1/3)</h2>
+<pre><code contenteditable>class Image {
+    public function __construct($path) {
+        $this->image = imagecreatefromjpeg($path);
     }
 
-    // getters/setters
+    public function getSize() {
+        return array(imagesx($this->image), imagesy($this->image));
+    }
 }</code></pre>
-                    </section>
-                    <section>
-                        <h3><span class="doctrine-color">Associations</span> - Address</h3>
-                        <pre><code contenteditable>/** @ORM\Entity */
-class Address {
-    /* @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue(strategy="AUTO") */
-    protected $id;
-
-    /** @ORM\Column(type="string") */
-    protected $city;
-
-    /** @ORM\Column(type="string") */
-    protected $country;
-
-    // getters/setters etc.
-}</code></pre>
-                    </section>
-                    <section>
-                        <h3><span class="doctrine-color">Associations</span> - Projects</h3>
-<pre><code contenteditable>/** @ORM\Entity */
-class Project {
-    /* @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue(strategy="AUTO") */
-    protected $id;
-
-    /** @ORM\Column(type="string") */
-    protected $name;
-
-    // getters/setters
-}</code></pre>
-                    </section>
-                    <section>
-                        <h3><span class="doctrine-color">Associations</span> - Persisting associations</h3>
-<pre><code contenteditable>$user = new User();
-$user->setFullName('Marco Pivetta');
-$em->persist($user);
-
-$address = new Address();
-$address->setCity('Frankfurt')
-$address->setCountry('Germany');
-$em->persist($address);
-
-$project = new Project();
-$project->setName('Doctrine ORM');
-$em->persist($project);
-
-$user->setAddress($address);
-$user->getProjects()->add($project);
-$em->flush();</code></pre>
-                    </section>
-                    <section>
-                        <h3><span class="doctrine-color">Associations</span> - Retrieving associations</h3>
-<pre><code contenteditable>$user = $em->find('User', 1);
-
-var_dump($user->getAddress()->getCity()); // Frankfurt
-var_dump($user->getProjects()->first()->getName()) // Doctrine ORM</code></pre>
-                    </section>
-
-                    <!-- add "so you're telling me" meme -->
-                    <!-- add "yo dawg" meme here -->
-                    <section>
-                        More tutorials at
-                        <a href="http://marco-pivetta.com/doctrine2-orm-tutorial">
-                            http://marco-pivetta.com/doctrine2-orm-tutorial
-                        </a>
-                    </section>
                 </section>
 
-				<section>
-                    <h2>
-                        <span class="zf-color">Modules!</span>
-                    </h2>
+                <section>
+                    <h2><span class="proxy-color">Lazy Loading</span> example (2/3)</h2>
+<pre><code contenteditable>class ImageProxy extends Image {
+    protected $image;
+    public function __construct($path) {
+        $this->path = $path;
+    }
+
+    private function init() {
+        if ( ! $this->image) {
+            $this->image = new Image($this->path);
+        }
+    }
+
+    public function getSize() {
+        $this->init();
+        return $this->image->getSize();
+    }
+}</code></pre>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">Lazy Loading</span> example (3/3)</h2>
+<pre><code contenteditable>$img1 = new ImageProxy('/path/to/image1.jpg');
+var_dump(memory_get_usage()); // ~200Kb
+$img2 = new ImageProxy('/path/to/image2.jpg');
+var_dump(memory_get_usage()); // ~200Kb
+$img3 = new ImageProxy('/path/to/image3.jpg');
+var_dump(memory_get_usage()); // ~200Kb
+
+$size1 = $img1->getSize();
+var_dump(memory_get_usage()); // ~4Mb
+$size2 = $img2->getSize();
+var_dump(memory_get_usage()); // ~8Mb</code></pre>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">lazy loading</span> pros/cons</h2>
+                    <ul>
+                        <li>
+                            Advantages
+                            <ul>
+                                <li>Low memory impact</li>
+                                <li>Low overhead</li>
+                                <li>Easy to implement</li>
+                                <li>Useful to determine object "dirty" status</li>
+                            </ul>
+                        </li>
+                        <li>
+                            Dis-advantages
+                            <ul>
+                                <li>Not optimal for data that is always loaded</li>
+                                <li>Lazy loading means lazy failing</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">remote object</span></h2>
+                    <img
+                        alt="Remote Object Proxy UML"
+                        src="http://yuml.me/diagram/plain;dir:LR;/class/[Customer]<-.- uses[RestServer],[RestServer]intertubes-intertubes[RestClient],[RestClient]<-.- uses[CustomerProxy{bg:orange}],[CustomerProxy{bg:orange}]<-.-uses[ECommerceApplication]"
+                    />
                     <p>
-                        The doctrine related modules are a <strong>thin</strong> integration layer
-                        between ZF2 and the ORM:
-                        <ul>
-                            <li>
-                                <span class="zf-color">DoctrineModule</span> provides basic functionality
-                                common to various doctrine sub-projects.
-                            </li>
-                            <li>
-                                <span class="zf-color">DoctrineORMModule</span> specifically provides you
-                                with the ORM
-                            </li>
-                        </ul>
+                        It basically is a specific form of lazy loading
                     </p>
-				</section>
-
-                <section>
-                    <h2>Installation!</h2>
                 </section>
 
                 <section>
-                    <pre>
-                        <code contenteditable>php composer.phar install doctrine/doctrine-orm-module:0.*</code>
-                    </pre>
-                    <!-- add fancy installation munch munch image -->
-                </section>
+                    <h2><span class="proxy-color">remote object</span> example (1/3)</h2>
+<pre><code contenteditable>class Tweet {
+    protected $data;
 
-                <section>
-                    <pre>
-                        <code contenteditable>php composer.phar install zendframework/zend-developer-tools:dev-master@dev</code>
-                    </pre>
-                    <!-- add "thumbs up" meme -->
-                </section>
+    public function __construct(array $data) {
+        $this->data = $data;
+    }
 
-				<section>
-                    <h3>Enabling the modules</h3>
-                    <p>In <code>config/application.config.php</code></p>
-<pre><code contenteditable>return array(
-    'modules' => array(
-        'ZendDeveloperTools',
-        'Application',
-        'DoctrineModule',
-        'DoctrineORMModule',
-    ),
-    // [...]
-);
-</code></pre>
-				</section>
-
-				<section>
-					<h2>Write your first entity</h2>
-                    <p>In <code>module/Application/src/Application/Entity/User</code></p>
-                    <pre><code contenteditable>
-namespace Application\Entity;
-
-/** @ORM\Entity */
-class User {
-    /**
-    * @ORM\Id
-    * @ORM\GeneratedValue(strategy="AUTO")
-    * @ORM\Column(type="integer")
-    */
-    protected $id;
-
-    /** @ORM\Column(type="string") */
-    protected $fullName;
-
-    // getters/setters
-}</code></pre>
-				</section>
-
-				<section>
-					<h2>Configure <span class="doctrine-color">mappings</span></h2>
-                    <p>in <code>module/Application/config/module.config.php</code>:</p>
-                    <pre><code contenteditable>return array(
-    'doctrine' => array(
-        'driver' => array(
-            'application_entities' => array(
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
-                'cache' => 'array',
-                'paths' => array(__DIR__ . '/../src/Application/Entity')
-            ),
-
-            'orm_default' => array(
-                'drivers' => array(
-                    'Application\Entity' => 'application_entities'
-                )
-    ))), // [...]</code></pre>
-				</section>
-
-                <section>
-                    <h2>Configure <span class="doctrine-color">connection</span></h2>
-                    <p>in <code>config/autoload/doctrine.local.php</code>:</p>
-                    <pre><code contenteditable>return array(
-    'doctrine' => array(
-        'connection' => array(
-            'orm_default' => array(
-                'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
-                    'params' => array(
-                        'host'     => 'localhost',
-                        'port'     => '3306',
-                        'user'     => 'username',
-                        'password' => 'password',
-                        'dbname'   => 'database',
-))))));</code></pre>
-                </section>
-
-                <section>
-                    <h2>Generate the database</h2>
-                    <!-- insert "Oooooooh!" meme here -->
-                    <pre><code contenteditable>./vendor/bin/doctrine-module orm:schema-tool:create</code></pre>
-                </section>
-
-                <!-- add slide about mapping overview in ZDT -->
-
-                <section>
-                    <h2>Test it!</h2>
-                    <p>In <code>module/Application/src/Application/Controller/IndexController.php</code></p>
-                    <pre><code contenteditable>public function indexAction() {
-    $em = $this
-        ->getServiceLocator()
-        ->get('Doctrine\ORM\EntityManager');
-
-    $user = new User();
-    $user->setFullName('Marco Pivetta');
-
-    $em->persist($user);
-    $em->flush();
-
-    die(var_dump($user->getId()); // yes, I'm lazy
+    public function getText() {
+        return $this->data['text'];
+    }
 }</code></pre>
                 </section>
 
-                <!-- Continue to module-specific stuff -->
+                <section>
+                    <h2><span class="proxy-color">remote object</span> example (2/3)</h2>
+<pre><code contenteditable>class TweetProxy extends Tweet {
+    protected $api; protected $tweet; protected $id;
 
+    public function __construct(TwitterApi $api, $id) {
+        $this->api = $api; $this->id = $id;
+    }
+    private function init() {
+        if ( ! $this->tweet) {
+            $this->tweet = new Tweet($this->api->get($this->id));
+        }
+    }
+    public function getText() {
+        $this->init();
+        return $this->tweet->getText();
+    }
+}</code></pre>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">remote object</span> example (3/3)</h2>
+<pre><code contenteditable>$tweet = new Tweet(array('text' => 'Proxies in PHP!'));
+var_dump($tweet->getText()); // 'Proxies in PHP!'
+
+$api = new TwitterApi(/* yadda */); // based on zf, guzzle, buzz
+
+$remoteTweet = new TweetProxy($api, 280643708968386560);
+var_dump($remoteTweet->getText()); // 'Tweet text!'
+$remoteTweet = new TweetProxy($api, 280643708968386561);
+var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">remote object</span> pros/cons</h2>
+                    <ul>
+                        <li>
+                            Advantages
+                            <ul>
+                                <li>Abstraction of a remote object</li>
+                                <li>Very strong performance improvement</li>
+                                <li>You can re-define the proxied object's API locally</li>
+                            </ul>
+                        </li>
+                        <li>
+                            Dis-advantages
+                            <ul>
+                                <li>To use such a proxy, you almost always need a configured remote client</li>
+                                <li>Remote objects fail very easily</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">Smart reference</span></h2>
+                    <p>
+                        Smart reference can be used to:
+                    </p>
+                    <ul>
+                        <li>swap the proxied object at runtime</li>
+                        <li>reference singletons or use internal static registries</li>
+                        <li>Optimize memory usage</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">Smart Reference</span> with <span class="php-color">Weakref</span></h2>
+                    <p>
+                        Using <a href="http://php.net/manual/en/class.weakref.php" target="_blank">Weakref</a>
+                        to save memory on long-running processes
+                    </p>
+                    <pre><code contenteditable>class ImageProxy extends Image {
+    // [...] (see previous example)
+    private function init() {
+        if ( ! $this->imageRef || ! $this->imageRef->valid()) {
+            $this->imageRef = new WeakRef(new Image($this->path));
+        }
+
+        return $this->imageRef->get();
+    }
+
+    public function getSize() {
+        return $this->init()->getSize();
+    }
+}</code></pre>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">Smart Reference</span> pros/cons</h2>
+                    <p>Mainly memory usage, but it depends on how you setup your "smart" reference</p>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">Protection proxy</span></h2>
+                    <p>
+                        Protection proxy comes into play when you want to transparently limit access to an API
+                        through a set of rules (ACL/limits)
+                    </p>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">Protection proxy</span> example (1/2)</h2>
+                    <pre><code contenteditable>class RemoteApiProxy extends RemoteApi {
+    public function __construct(RemoteApi $api, $limit) {
+        $this->api = $api; $this->limit = $limit; $this->count = 0;
+    }
+
+    private function count() {
+        if (++$this->count > $this->limit) {
+            throw new RemoteApiLimit('STAHP!');
+        }
+    }
+
+    public function doStuff() {
+        $this->count();
+        return $this->api->doStuff();
+    }
+}</code></pre>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">Protection proxy</span> example (2/2)</h2>
+                    <pre><code contenteditable>$api = new RemoteApiProxy(new RemoteApi(/* ... */, 50);
+
+while (1) {
+    $api->doStuff(); // RemoteApiLimit exception!
+}</code></pre>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">smart reference</span> pros/cons</h2>
+                    <ul>
+                        <li>
+                            Advantages
+                            <ul>
+                                <li>Transparent filtering or limiting of access to an object</li>
+                            </ul>
+                        </li>
+                        <li>
+                            Dis-advantages
+                            <ul>
+                                <li>Modifies proxied object behavior! More like a decorator!</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">Null object fallback proxy</span></h2>
+                    <p>
+                        A null object is an object that implements an interface,
+                        but produces no side effects. It replaces '<code>null</code>'.
+                    </p>
+                    <p>
+                        Using null objects allows us to work with the assumption that an object
+                        will always be available, reducing checks against '<code>null</code>' by
+                        a lot.
+                    </p>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">Null object fallback proxy</span> example</h2>
+                    <pre><code contenteditable>class CustomerProxy extends Customer {
+    public function __construct(Db $db, $id) {
+        $this->customer = $db->find($id);
+        if ( ! $customer) {
+            $this->customer = new NullCustomer();
+        }
+    }
+
+    public function doStuff() {
+        return $this->customer->doStuff();
+    }
+}</code></pre>
+                </section>
+
+                <section>
+                    <h2><span class="proxy-color">Null object fallback proxy</span> pros</h2>
+                    <ul>
+                        <li>Performance (removal of a lot of conditionals)</li>
+                        <li>Reduced NPaths, therefore code is easier to test</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2><span class="php-color">AOP</span> and <span class="proxy-color">proxies</span></h2>
+                    <p>
+                        Proxies basically enable us to have logic between us and any object, making
+                        AOP easy even when the language doesn't allow it.
+                    </p>
+                    <p>
+                        We can use code generation to create on-the-fly proxies with our custom AOP logic
+                        executed pre- and post- any method of the proxied object.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Implementation details in <span class="php-color">PHP</span></h2>
+                </section>
+
+                <section>
+                    <h2>Implementing the public API</h2>
+                    <ol>
+                        <li>The Proxy class MUST extend the proxied class</li>
+                        <li>Each of the proxied methods must be rewritten</li>
+                        <li>Proxies should be serializable</li>
+                        <li>Proxies should handle public properties</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2>Public properties proxying</h2>
+                    <pre><code contenteditable>class Customer {
+    public $name;
+    public $surname;
+}</code></pre>
+                    <pre><code contenteditable>class CustomerProxy extends Customer {
+    public function __construct(Customer $customer) {
+        unset($this->name, $this->surname);
+        $this->customer = $customer;
+    }
+
+    public function __set($name, $value) {
+        $this->customer->$name = $value;
+    }
+    public function __get($name) {
+        return $this->customer->$name;
+    }
+    // __isset, __unset
+}</code></pre>
+                </section>
+
+                <section>
+                    <h2>Code generation</h2>
+                    <p>
+                        See
+                        <a href="https://github.com/doctrine/common/blob/master/lib/Doctrine/Common/Proxy/ProxyGenerator.php">
+                            Doctrine's Proxy Generator
+                        </a>
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Questions?</h2>
+                </section>
 			</div>
+
 
 		</div>
 
