@@ -20,7 +20,7 @@
 
 		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
 		<script>
-			document.write( '<link rel="stylesheet" href="reveal/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+			document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
 		</script>
 
 		<!--[if lt IE 9]>
@@ -162,6 +162,24 @@
                 </section>
 
                 <section>
+                    <h2><span class="proxy-color">Lazy Loading</span> patterns</h2>
+                    <ol>
+                        <li>Virtual Object</li>
+                        <li>Value Holder (This example)</li>
+                        <li>Ghost Object (Doctrine)</li>
+                    </ol>
+
+                    <aside class="notes">
+                        Virtual Object is an object where each field is null, and each access to a field has to be
+                        tracked.
+                        <br/>
+                        Value Holder is basically a wrapper for the real object that is loaded at first access.
+                        <br/>
+                        Ghost Object is an object with identifier only and all fields loaded at first access.
+                    </aside>
+                </section>
+
+                <section>
                     <h2><span class="proxy-color">Lazy Loading</span> example (1/3)</h2>
 <pre><code contenteditable>class Image {
     public function __construct($path) {
@@ -283,7 +301,7 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 <pre><code contenteditable>$tweet = new Tweet(array('text' => 'Proxies in PHP!'));
 var_dump($tweet->getText()); // 'Proxies in PHP!'
 
-$api = new TwitterApi(/* yadda */); // based on zf, guzzle, buzz
+$api = new TwitterApi(/* yadda */); // zf, buzz, etc
 
 $remoteTweet = new TweetProxy($api, 280643708968386560);
 var_dump($remoteTweet->getText()); // 'Tweet text!'
@@ -360,10 +378,11 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
                 </section>
 
                 <section>
-                    <h2><span class="proxy-color">Protection proxy</span> example (1/2)</h2>
+                    <h2><span class="proxy-color">Protection proxy</span> (1/2)</h2>
                     <pre><code contenteditable>class RemoteApiProxy extends RemoteApi {
+    protected $count = 0;
     public function __construct(RemoteApi $api, $limit) {
-        $this->api = $api; $this->limit = $limit; $this->count = 0;
+        $this->api = $api; $this->limit = $limit;
     }
 
     private function count() {
@@ -380,8 +399,8 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
                 </section>
 
                 <section>
-                    <h2><span class="proxy-color">Protection proxy</span> example (2/2)</h2>
-                    <pre><code contenteditable>$api = new RemoteApiProxy(new RemoteApi(/* ... */, 50);
+                    <h2><span class="proxy-color">Protection proxy</span> (2/2)</h2>
+                    <pre><code contenteditable>$api = new RemoteApiProxy(new RemoteApi(/* ... */), 50);
 
 while (1) {
     $api->doStuff(); // RemoteApiLimit exception!
@@ -424,7 +443,8 @@ while (1) {
                     <pre><code contenteditable>class CustomerProxy extends Customer {
     public function __construct(Db $db, $id) {
         $this->customer = $db->find($id);
-        if ( ! $customer) {
+
+        if ( ! $this->customer) {
             $this->customer = new NullCustomer();
         }
     }
@@ -453,6 +473,27 @@ while (1) {
                         We can use code generation to create on-the-fly proxies with our custom AOP logic
                         executed pre- and post- any method of the proxied object.
                     </p>
+                </section>
+
+                <section>
+                    <h2><span class="php-color">AOP</span> examples</h2>
+<pre><code contenteditable>/**
+ * @AOP\Cache(ttl=3600)
+ */
+public function doHeavyStuff() {
+    // [...]
+}</code></pre>
+<p>Becomes:</p>
+<pre><code contenteditable>public function doHeavyStuff() {
+    if($cached = $this->cache->get('doHeavyStuff', func_get_args())) {
+        return $cached;
+    }
+
+    $return = $this->originalObject->doHeavyStuff();
+    $this->cache->set($return, 'doHeavyStuff', func_get_args());
+
+    return $return;
+}</code></pre>
                 </section>
 
                 <section>
