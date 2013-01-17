@@ -1,31 +1,31 @@
 <!doctype html>
 <html lang="en">
 
-	<head>
-		<meta charset="utf-8">
+    <head>
+        <meta charset="utf-8">
 
-		<title>Proxy Pattern applied to PHP</title>
+        <title>Proxy Pattern applied to PHP</title>
 
-		<meta name="description" content="An introduction to the Proxy Pattern, its usages and its implementation in the PHP world">
-		<meta name="author" content="Marco Pivetta">
+        <meta name="description" content="An introduction to the Proxy Pattern, its usages and its implementation in the PHP world">
+        <meta name="author" content="Marco Pivetta">
 
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-		<link rel="stylesheet" href="reveal.js/css/reveal.min.css">
-		<link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme">
+        <link rel="stylesheet" href="reveal.js/css/reveal.min.css">
+        <link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme">
 
-		<!-- For syntax highlighting -->
-		<link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
 
-		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
-		<script>
-			document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
-		</script>
+        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+        <script>
+            document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+        </script>
 
-		<!--[if lt IE 9]>
-		<script src="reveal.js/lib/js/html5shiv.js"></script>
-		<![endif]-->
+        <!--[if lt IE 9]>
+        <script src="reveal.js/lib/js/html5shiv.js"></script>
+        <![endif]-->
 
         <style type="text/css">
             .reveal section img {
@@ -51,11 +51,11 @@
             }
 
         </style>
-	</head>
+    </head>
 
-	<body>
-		<div class="reveal">
-			<div class="slides">
+    <body>
+        <div class="reveal">
+            <div class="slides">
 
                 <section>
                     <h1>
@@ -64,12 +64,12 @@
                         in <span class="php-color" style="font-size: 120%;">PHP</span>
                     </h1>
                 </section>
-				<section>
-					<h2>
+                <section>
+                    <h2>
                         <img src="assets/img/ocramius.gif" alt="Marco Pivetta" style="width: 50px"/>
                         Marco Pivetta
                     </h2>
-					<p>
+                    <p>
                         <ul>
                             <li>
                                 <span class="doctrine-color">Doctrine</span> core team
@@ -83,33 +83,31 @@
                                     <li>OcraDiCompiler</li>
                                     <li>OcraServiceManager</li>
                                     <li>OcraCachedViewResolver</li>
-                                    <li>DoctrineModule</li>
-                                    <li>DoctrineORMModule</li>
-                                    <li>DoctrineMongoODMModule</li>
+                                    <li>Doctrine ZF2 Modules</li>
                                     <li>ZeffMu</li>
                                     <li>AssetManager</li>
                                     <li>KJSencha</li>
                                 </ul>
                             </li>
                         </ul>
-					</p>
-                    <p>
-                        <!-- @todo add twitter/github glyphicons here -->
-                        <a href="http://twitter.com/Ocramius" target="_blank">@Ocramius</a>
-                        -
-                        <a href="http://github.com/Ocramius" target="_blank">Ocramius</a>
                     </p>
-				</section>
+                    <p>
+                        <a href="https://twitter.com/Ocramius" target="_blank" class="twitter-follow-button" data-show-count="false" data-lang="en" data-size="large">@Ocramius</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                        &nbsp;
+                        <iframe src="http://ghbtns.com/github-btn.html?user=Ocramius&type=follow&size=large" allowtransparency="true" frameborder="0" scrolling="0" width="190" height="30"></iframe>
+                    </p>
+                </section>
 
                 <section>
-                    <h2>What is the <span class="proxy-color">Proxy Pattern</span>?</h2>
+                    <h2>What is a <span class="proxy-color">Proxy</span>?</h2>
                     <p>
                         A proxy is generally an object whose interface is a layer between us and a different object
                         with the same interface.
                     </p>
 
                     <aside class="notes">
-                        A proxy, in its most general form, is a class functioning as an interface to something else.
+                        A proxy is a class functioning as an interface to something else.
                         <br/>
                         This allows us, due to the Liskov Substitution Principle, to use it anywhere the other object
                         is required.
@@ -142,7 +140,16 @@
                 </section>
 
                 <section>
-                    <h2>When to use a <span class="php-color">Proxy</span></h2>
+                    <h2>Where to use <span class="proxy-color">Proxies</span>?</h2>
+                    <p>
+                        As of the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_blank">
+                        <abbr title="Liskov Substitution Principle">LSP</abbr></a>, a proxy can be used in
+                        any place where the "proxied" object can be used.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>When to use a <span class="proxy-color">Proxy</span>?</h2>
                     <ul>
                         <li>Lazy loading</li>
                         <li>Remote objects</li>
@@ -162,25 +169,51 @@
                 </section>
 
                 <section>
-                    <h2><span class="proxy-color">Lazy Loading</span> patterns</h2>
-                    <ol>
-                        <li>Virtual Object</li>
-                        <li>Value Holder (This example)</li>
-                        <li>Ghost Object (Doctrine)</li>
-                    </ol>
-
-                    <aside class="notes">
-                        Virtual Object is an object where each field is null, and each access to a field has to be
-                        tracked.
-                        <br/>
-                        Value Holder is basically a wrapper for the real object that is loaded at first access.
-                        <br/>
-                        Ghost Object is an object with identifier only and all fields loaded at first access.
-                    </aside>
+                    <section>
+                        <h2><span class="proxy-color">Lazy Loading</span> patterns</h2>
+                        <ol>
+                            <li>Virtual Object</li>
+                            <li>Value Holder</li>
+                            <li>Ghost Object</li>
+                        </ol>
+                    </section>
+                    
+                    <section>
+                        <h2><span class="proxy-color">Virtual Object</span></h2>
+                        <p>
+                            An object whose properties are all set to <code>null</code>, and where
+                            each access to the properties is tracked.
+                        </p>
+                        <p>
+                            Access triggers lazy loading on the property.
+                        </p>
+                    </section>
+                    
+                    <section>
+                        <h2><span class="proxy-color">Value Holder</span></h2>
+                        <p>
+                            An object that can hold an instance of the original proxied object, and loads it only
+                            when needed.
+                        </p>
+                    </section>
+                    
+                    <section>
+                        <h2><span class="proxy-color">Ghost Object</span></h2>
+                        <p>
+                            An object whose properties are the same of the proxied object, but <code>null</code>.
+                        </p>
+                        <p>
+                            Accessing any method causes loading of the properties.
+                        </p>
+                        <p>
+                            <a class="doctrine-color" href="https://github.com/doctrine/common/tree/master/lib/Doctrine/Common/Proxy" target="_blank">Doctrine Proxies</a>
+                            are <a class="php-color" href="https://gist.github.com/4038004" target="_blank">generated</a> this way.
+                        </p>
+                    </section>
                 </section>
 
                 <section>
-                    <h2><span class="proxy-color">Lazy Loading</span> example (1/3)</h2>
+                    <h2><span class="proxy-color">Value Holder</span> example (1/3)</h2>
 <pre><code contenteditable>class Image {
     public function __construct($path) {
         $this->image = imagecreatefromjpeg($path);
@@ -193,7 +226,7 @@
                 </section>
 
                 <section>
-                    <h2><span class="proxy-color">Lazy Loading</span> example (2/3)</h2>
+                    <h2><span class="proxy-color">Value Holder</span> example (2/3)</h2>
 <pre><code contenteditable>class ImageProxy extends Image {
     protected $image;
     public function __construct($path) {
@@ -214,7 +247,7 @@
                 </section>
 
                 <section>
-                    <h2><span class="proxy-color">Lazy Loading</span> example (3/3)</h2>
+                    <h2><span class="proxy-color">Value Holder</span> example (3/3)</h2>
 <pre><code contenteditable>$img1 = new ImageProxy('/path/to/image1.jpg');
 var_dump(memory_get_usage()); // ~200Kb
 $img2 = new ImageProxy('/path/to/image2.jpg');
@@ -316,7 +349,6 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
                             Advantages
                             <ul>
                                 <li>Abstraction of a remote object</li>
-                                <li>Very strong performance improvement</li>
                                 <li>You can re-define the proxied object's API locally</li>
                             </ul>
                         </li>
@@ -364,6 +396,22 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
 }</code></pre>
                 </section>
 
+                <section>
+                    <h2><span class="proxy-color">Smart Reference</span> with a <span class="php-color">Registry</span></h2>
+                    <pre><code contenteditable>class ImageProxy extends Image {
+    // [...] (see previous example)
+    private function init() {
+        if (null === $this->image) {
+            $this->image = ImageRegistry::get($this->path);
+        }
+    }
+
+    public function getSize() {
+        $this->init();
+        return $this->image->getSize();
+    }
+}</code></pre>
+                </section>
                 <section>
                     <h2><span class="proxy-color">Smart Reference</span> pros/cons</h2>
                     <p>Mainly memory usage, but it depends on how you setup your "smart" reference</p>
@@ -428,13 +476,14 @@ while (1) {
                 <section>
                     <h2><span class="proxy-color">Null object fallback proxy</span></h2>
                     <p>
-                        A null object is an object that implements an interface,
-                        but produces no side effects. It replaces '<code>null</code>'.
+                        A <span class="php-color">null object</span> is an object that implements 
+                        an interface, but produces no side effects. It replaces 
+                        <code class="php-color">null</code>.
                     </p>
                     <p>
-                        Using null objects allows us to work with the assumption that an object
-                        will always be available, reducing checks against '<code>null</code>' by
-                        a lot.
+                        Using <span class="php-color">null objects</span> allows us to work with the 
+                        assumption that an object will always be available, reducing checks against 
+                        <code class="php-color">null</code> by a lot.
                     </p>
                 </section>
 
@@ -458,7 +507,7 @@ while (1) {
                 <section>
                     <h2><span class="proxy-color">Null object fallback proxy</span> pros</h2>
                     <ul>
-                        <li>Performance (removal of a lot of conditionals)</li>
+                        <li>Performance (with small # of instances)</li>
                         <li>Reduced NPaths, therefore code is easier to test</li>
                     </ul>
                 </section>
@@ -531,7 +580,26 @@ public function doHeavyStuff() {
     // __isset, __unset
 }</code></pre>
                 </section>
+                
+                <section>
+                    <h2>A complete <span class="proxy-color">Ghost Object</span> implementation</h2>
+                    <p>
+                        <a href="https://gist.github.com/4038004" target="_blank">https://gist.github.com/4038004</a>
+                    </p>
+                </section>
 
+                <section>
+                    <h2>Some useful <span class="php-color">libraries</span></h2>
+                    <p>
+                        <ul>
+                            <li><a href="http://flow.typo3.org/" target="_blank">http://flow.typo3.org</a></li>
+                            <li><a href="https://github.com/schmittjoh/cg-library/" target="_blank">https://github.com/schmittjoh/cg-library</a></li>
+                            <li><a href="https://github.com/doctrine/common/" target="_blank">https://github.com/doctrine/common</a></li>
+                            <li><a href="https://github.com/lisachenko/go-aop-php/" target="_blank">https://github.com/lisachenko/go-aop-php</a></li>
+                        </ul>
+                    </p>
+                </section>
+                
                 <section>
                     <h2>Code generation</h2>
                     <p>
@@ -545,40 +613,40 @@ public function doHeavyStuff() {
                 <section>
                     <h2>Questions?</h2>
                 </section>
-			</div>
+            </div>
 
 
-		</div>
+        </div>
 
-		<script src="reveal.js/lib/js/head.min.js"></script>
-		<script src="reveal.js/js/reveal.min.js"></script>
+        <script src="reveal.js/lib/js/head.min.js"></script>
+        <script src="reveal.js/js/reveal.min.js"></script>
 
-		<script>
+        <script>
 
-			// Full list of configuration options available here:
-			// https://github.com/hakimel/reveal.js#configuration
-			Reveal.initialize({
-				controls: true,
-				progress: true,
-				history: true,
-				center: true,
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
 
-				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
 
-				// Optional libraries used to extend on reveal.js
-				dependencies: [
-					{ src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-					{ src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-					{ src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-					// { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
-				]
-			});
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                    // { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
 
-		</script>
+        </script>
 
-	</body>
+    </body>
 </html>
