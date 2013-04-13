@@ -1,652 +1,743 @@
 <!doctype html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf-8">
+<head>
+    <meta charset="utf-8">
 
-        <title>Proxy Pattern applied to PHP</title>
+    <title>OOP Proxies in PHP</title>
 
-        <meta name="description" content="An introduction to the Proxy Pattern, its usages and its implementation in the PHP world">
-        <meta name="author" content="Marco Pivetta">
+    <meta name="description" content="The Proxy OOP Pattern in PHP: how to use it and how to know when we need it">
+    <meta name="author" content="Marco Pivetta">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="stylesheet" href="reveal.js/css/reveal.min.css">
+    <link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme">
+    <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+    <script>
+        document.write(
+                '<link rel="stylesheet" href="reveal.js/css/print/'
+                        + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' )
+                        + '.css" type="text/css" media="print">'
+        );
+    </script>
+    <!--[if lt IE 9]><script src="reveal.js/lib/js/html5shiv.js"></script><![endif]-->
 
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-
-        <link rel="stylesheet" href="reveal.js/css/reveal.min.css">
-        <link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme">
-
-        <!-- For syntax highlighting -->
-        <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
-
-        <!-- If the query includes 'print-pdf', use the PDF print sheet -->
-        <script>
-            document.write( '<link rel="stylesheet" href="reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
-        </script>
-
-        <!--[if lt IE 9]>
-        <script src="reveal.js/lib/js/html5shiv.js"></script>
-        <![endif]-->
-
-        <style type="text/css">
-            .reveal section img {
-                border: 0;
-                background: none;
-                box-shadow: 0 0 #000;
-            }
-
-            .php-color {
-                color: #6C7EB7;
-            }
-
-            .proxy-color {
-                color: #FC6A31;
-            }
-
-            .zf-color {
-                color: #68B604;
-            }
-
-            .doctrine-color {
-                color: #FC6A31;
-            }
-
-        </style>
-    </head>
-
-    <body>
-        <div class="reveal">
-            <div class="slides">
-
-                <section>
-                    <h1>
-                        <span class="proxy-color">Proxy Pattern</span>
-                        <br/>
-                        in <span class="php-color" style="font-size: 120%;">PHP</span>
-                    </h1>
-                </section>
-                <section>
-                    <h2>
-                        <img src="assets/img/ocramius.gif" alt="Marco Pivetta" style="width: 50px"/>
-                        Marco Pivetta
-                    </h2>
-                    <p>
-                        <ul>
-                            <li>
-                                <span class="doctrine-color">Doctrine</span> core team
-                            </li>
-                            <li>
-                                <span class="zf-color">Zf2</span> contributor
-                            </li>
-                            <li>
-                                Wasting time on:
-                                <ul>
-                                    <li>OcraDiCompiler</li>
-                                    <li>OcraServiceManager</li>
-                                    <li>OcraCachedViewResolver</li>
-                                    <li>Doctrine ZF2 Modules</li>
-                                    <li>ZeffMu</li>
-                                    <li>AssetManager</li>
-                                    <li>KJSencha</li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </p>
-                    <p>
-                        <a href="https://twitter.com/Ocramius" target="_blank" class="twitter-follow-button" data-show-count="false" data-lang="en" data-size="large">@Ocramius</a>
-                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-                        &nbsp;
-                        <iframe src="http://ghbtns.com/github-btn.html?user=Ocramius&type=follow&size=large" allowtransparency="true" frameborder="0" scrolling="0" width="190" height="30"></iframe>
-                    </p>
-                </section>
-
-                <section>
-                    <h2>What is a <span class="proxy-color">Proxy</span>?</h2>
-                    <p>
-                        A proxy is generally an object whose interface is a layer between us and a different object
-                        with the same interface.
-                    </p>
-
-                    <aside class="notes">
-                        A proxy is a class functioning as an interface to something else.
-                        <br/>
-                        This allows us, due to the Liskov Substitution Principle, to use it anywhere the other object
-                        is required.
-                    </aside>
-                </section>
-
-                <section>
-                    <p>
-                        <img
-                            alt="Proxy Pattern UML"
-                            src="http://yuml.me/diagram/class/[CustomerProxy|+doStuff()]<-.- uses[CRMApplication],[CustomerInterface|+doStuff()]^-.-implements[Customer|+doStuff()],[Customer|+doStuff()]<-.- uses[CustomerProxy|+doStuff(){bg:orange}],[CustomerInterface|+doStuff()]^implements-.-[CustomerProxy|+doStuff(){bg:orange}]"
-                        />
-                    </p>
-                </section>
-
-                <section>
-                    <p>Simplified, in <span class="php-color">PHP</span></p>
-                    <p>
-
-                        <img
-                            alt="Proxy Pattern PHP (simplified)"
-                            src="http://yuml.me/diagram/class/[CustomerProxy|+doStuff()]<-.- uses[CRMApplication],[Customer|+doStuff()]^- extends[CustomerProxy|+doStuff(){bg:orange}]"
-                        />
-                    </p>
-                    <p>
-                        Even if we're not implementing an interface, the interface of
-                        <code class="proxy-color">CustomerProxy</code>
-                        is the same as the one of <code>Customer</code>
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Where to use <span class="proxy-color">Proxies</span>?</h2>
-                    <p>
-                        As of the <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target="_blank">
-                        <abbr title="Liskov Substitution Principle">LSP</abbr></a>, a proxy can be used in
-                        any place where the "proxied" object can be used.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>When to use a <span class="proxy-color">Proxy</span>?</h2>
-                    <ul>
-                        <li>Lazy loading</li>
-                        <li>Remote objects</li>
-                        <li>Smart reference/Weak reference</li>
-                        <li>Protection</li>
-                        <li>AOP</li>
-                        <li>Null object fallback</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2><span class="proxy-color">Lazy Loading</span></h2>
-                    <p>
-                        We may want to use lazy loading to avoid <abbr title="Input/Output">IO</abbr> operations
-                        or heavy loading operation until really needed
-                    </p>
-                </section>
-
-                <section>
-                    <section>
-                        <h2><span class="proxy-color">Lazy Loading</span> patterns</h2>
-                        <ol>
-                            <li>Virtual Object</li>
-                            <li>Value Holder</li>
-                            <li>Ghost Object</li>
-                        </ol>
-                    </section>
-                    
-                    <section>
-                        <h2><span class="proxy-color">Virtual Object</span></h2>
-                        <p>
-                            An object whose properties are all set to <code>null</code>, and where
-                            each access to the properties is tracked.
-                        </p>
-                        <p>
-                            Access triggers lazy loading on the property.
-                        </p>
-                    </section>
-                    
-                    <section>
-                        <h2><span class="proxy-color">Value Holder</span></h2>
-                        <p>
-                            An object that can hold an instance of the original proxied object, and loads it only
-                            when needed.
-                        </p>
-                    </section>
-                    
-                    <section>
-                        <h2><span class="proxy-color">Ghost Object</span></h2>
-                        <p>
-                            An object whose properties are the same of the proxied object, but <code>null</code>.
-                        </p>
-                        <p>
-                            Accessing any method causes loading of the properties.
-                        </p>
-                        <p>
-                            <a class="doctrine-color" href="https://github.com/doctrine/common/tree/master/lib/Doctrine/Common/Proxy" target="_blank">Doctrine Proxies</a>
-                            are <a class="php-color" href="https://gist.github.com/4038004" target="_blank">generated</a> this way.
-                        </p>
-                    </section>
-                </section>
-
-                <section>
-                    <h2><span class="proxy-color">Value Holder</span> example (1/3)</h2>
-<pre><code contenteditable>class Image {
-    public function __construct($path) {
-        $this->image = imagecreatefromjpeg($path);
-    }
-
-    public function getSize() {
-        return array(imagesx($this->image), imagesy($this->image));
-    }
-}</code></pre>
-                </section>
-
-                <section>
-                    <h2><span class="proxy-color">Value Holder</span> example (2/3)</h2>
-<pre><code contenteditable>class ImageProxy extends Image {
-    protected $image;
-    public function __construct($path) {
-        $this->path = $path;
-    }
-
-    private function init() {
-        if ( ! $this->image) {
-            $this->image = new Image($this->path);
+    <style type="text/css">
+        .reveal section img {
+            border: 0;
+            background: none;
+            box-shadow: 0 0 #000;
         }
-    }
 
-    public function getSize() {
-        $this->init();
-        return $this->image->getSize();
-    }
-}</code></pre>
-                </section>
+        .php-color {
+            color: #6C7EB7;
+        }
 
-                <section>
-                    <h2><span class="proxy-color">Value Holder</span> example (3/3)</h2>
-<pre><code contenteditable>$img1 = new ImageProxy('/path/to/image1.jpg');
-var_dump(memory_get_usage()); // ~200Kb
-$img2 = new ImageProxy('/path/to/image2.jpg');
-var_dump(memory_get_usage()); // ~200Kb
-$img3 = new ImageProxy('/path/to/image3.jpg');
-var_dump(memory_get_usage()); // ~200Kb
+        .proxy-color {
+            color: #FC6A31;
+        }
 
-$size1 = $img1->getSize();
-var_dump(memory_get_usage()); // ~4Mb
-$size2 = $img2->getSize();
-var_dump(memory_get_usage()); // ~8Mb</code></pre>
-                </section>
+        .zf-color {
+            color: #68B604;
+        }
 
-                <section>
-                    <h2><span class="proxy-color">lazy loading</span> pros/cons</h2>
-                    <ul>
-                        <li>
-                            Advantages
-                            <ul>
-                                <li>Low memory impact</li>
-                                <li>Low overhead</li>
-                                <li>Easy to implement</li>
-                                <li>Useful to determine object "dirty" status</li>
-                            </ul>
-                        </li>
-                        <li>
-                            Dis-advantages
-                            <ul>
-                                <li>Not optimal for data that is always loaded</li>
-                                <li>Lazy loading means lazy failing</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </section>
+        .doctrine-color {
+            color: #FC6A31;
+        }
 
-                <section>
-                    <h2><span class="proxy-color">remote object</span></h2>
-                    <img
-                        alt="Remote Object Proxy UML"
-                        src="http://yuml.me/diagram/plain;dir:LR;/class/[Customer]<-.- uses[RestServer],[RestServer]intertubes-intertubes[RestClient],[RestClient]<-.- uses[CustomerProxy{bg:orange}],[CustomerProxy{bg:orange}]<-.-uses[ECommerceApplication]"
-                    />
-                    <p>
-                        It basically is a specific form of lazy loading
-                    </p>
-                </section>
+        .soothe .reveal .state-background {
+            background: rgba(255, 255, 255, 0.6);
+        }
 
-                <section>
-                    <h2><span class="proxy-color">remote object</span> example (1/3)</h2>
+        .pros-line:before, .cons-line:before {
+            opacity: 0.1;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+
+            -webkit-transition: opacity 0.2s ease;
+            -moz-transition: opacity 0.2s ease;
+            -ms-transition: opacity 0.2s ease;
+            -o-transition: opacity 0.2s ease;
+            transition: opacity 0.2s ease;
+        }
+
+        .pros-line:before {
+            color: red;
+        }
+
+        .cons-line:before {
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+<div class="reveal">
+<div class="slides">
+
+<section>
+    <h1>
+        The <span class="proxy-color">Proxy Pattern</span>
+        <br/>
+        in <span class="php-color" style="font-size: 120%;">PHP</span>
+    </h1>
+</section>
+<section>
+    <h2>
+        <img src="assets/img/ocramius.gif" alt="Marco Pivetta" style="width: 60px; margin: 0;"/>
+        Marco Pivetta
+    </h2>
+    <p class="fragment">
+        <img
+                src="assets/img/doctrine.svg"
+                alt="Doctrine Project" border="0"
+                height="40px"
+                style="margin: 0;"
+                />
+        <span class="doctrine-color">Doctrine</span> core team
+    </p>
+    <p class="fragment">
+        <img
+                src="assets/img/zf-logo.svg"
+                alt="Zend Framework 2"
+                width="60px"
+                style="margin: 0;"
+                />
+        <span class="zf-color">Zf2</span> contributor
+    </p>
+    <p class="fragment">
+        <img
+                src="assets/img/gh.svg"
+                alt="Ocramius on Github"
+                height="40px"
+                style="margin: 0;"
+                />
+        <a href="http://github.com/Ocramius" target="_blank">Ocramius</a>
+    </p>
+    <p class="fragment">
+        <img
+                src="assets/img/twitter.svg"
+                alt="Ocramius on Twitter"
+                height="30px"
+                style="margin: 0;"
+                />
+        <a href="http://twitter.com/Ocramius" target="_blank">Ocramius</a>
+    </p>
+</section>
+
+<section>
+    <h2>What is a <span class="proxy-color">Proxy</span>?</h2>
+    <p>A proxy is a class functioning as an interface to something else</p>
+
+    <p style="font-size: small;">(carefully pasted from wikipedia)</p>
+
+    <aside class="notes">
+        This allows us (thanks to the Liskov Substitution Principle) to use it anywhere the other object
+        is required.
+    </aside>
+</section>
+
+<section>
+    <h2>A <span class="proxy-color">Proxy</span> implements a <span class="php-color">Subject</span>'s interface</h2>
+
+    <p class="fragment">
+        We can use the <span class="proxy-color">proxy</span> in place of the
+        <span class="zf-color">subject</span> thanks to the
+        <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target=_blank>
+            <abbr title="Liskov Substitution Principle">LSP</abbr>
+        </a>
+    </p>
+</section>
+
+<section data-state="soothe">
+    <img
+            alt="A Proxy implements the same interface as of a real subject"
+            src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:blue}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}].svg"
+            />
+</section>
+
+<section data-state="soothe">
+    <h2><span class="zf-color">Client</span> consumes <span class="php-color">SubjectInterface</span></h2>
+
+    <img
+            alt="A Client uses the SubjectInterface"
+            src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]<-.-consumes [Client{bg:green}].svg"
+            />
+</section>
+
+<section data-state="soothe">
+    <h2><span class="zf-color">Client</span> consumes <span class="php-color">RealSubject</span></h2>
+
+    <img
+            alt="A Client uses the RealSubject"
+            src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:green}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [RealSubject{bg:blue}]<-.-consumes [Client{bg:green}].svg"
+            />
+</section>
+
+<section data-state="soothe">
+    <h2><span class="zf-color">Client</span> consumes <span class="proxy-color">SubjectProxy</span></h2>
+
+    <img
+            alt="A Client uses the SubjectProxy"
+            src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:green}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [SubjectProxy{bg:orange}]<-.-consumes [Client{bg:green}].svg"
+            />
+</section>
+
+<section>
+    <h2>In <span class="php-color">PHP</span>, things can be simplified</h2>
+
+    <p class="fragment">
+        Since we don't always work with interfaces, we can have
+        <span class="proxy-color">SubjectProxy</span> extending <span class="php-color">RealSubject</span>
+    </p>
+
+    <pre class="fragment"><code contenteditable>class SubjectProxy extends RealSubject { /* ... */ }</code></pre>
+
+    <p class="fragment">
+        <img
+                alt="ProxySubject extends the RealSubject"
+                src="http://yuml.me/diagram/scruffy;dir:TB;/class/[RealSubject{bg:green}]^-extends [SubjectProxy{bg:orange}].svg"
+                />
+    </p>
+
+    <p class="fragment" style="font-size: small;">Though you should use interfaces!</p>
+</section>
+
+<section>
+    <h2>What do <span class="proxy-color">Proxies</span> do?</h2>
+</section>
+
+<section>
+    <h2>From the <abbr title="Gang of Four">GoF</abbr>:</h2>
+    <p class="fragment">
+        <span class="proxy-color">Remote proxy</span>
+        <br/>
+        Provides a local representative for an object in a different address space
+    </p>
+    <p class="fragment">
+        <span class="proxy-color">Virtual proxy</span>
+        <br/>
+        Lazily instantiates expensive objects
+    </p>
+    <p class="fragment">
+        <span class="proxy-color">Protection proxy</span>
+        <br/>
+        Limits access to the real subject
+    </p>
+    <p class="fragment">
+        <span class="proxy-color">Smart reference</span>
+        <br/>
+        Performs additional actions when the subject is accessed
+    </p>
+</section>
+<!--
+<section>
+    Virtual proxy is a way of implementing LazyLoad (LazyInstantiationPattern)
+
+    Subtypes
+     - virtual proxy - exact copy of the real subject structure, usually contains a reference to
+       the real object
+     - ghost object - exact copy of the real object, but in partial state. Only identifier set. Triggers
+       lazy loading on first access. Not a proxy per-se, but we have to reproduce the original object's
+       API.
+
+    Similar LazyLoad pattern implementations
+     - lazy initialization - (via `if (!$this->initialized) { $this->initialize(); }` - enforces dependency to
+       resources required for initialization
+     - value holder - usually like a registry (LSP not applicable then),
+       but can be implemented as a proxy (CareTakerPattern) and thus become a virtual proxy
+</section>
+-->
+<section>
+    Smart reference is actually DecoratorPattern - good for AOP
+</section>
+
+<section>
+    <h2><span class="proxy-color">Remote Proxy</span></h2>
+    <img
+            class="fragment"
+            alt="Remote Object Proxy UML"
+            src="http://yuml.me/diagram/plain;dir:LR;/class/[RealSubject{bg:green}]<-.- uses[AdapterServer{bg:blue}],[AdapterServer{bg:blue}]intertubes-intertubes[AdapterClient{bg:blue}],[AdapterClient{bg:blue}]<-.- uses[SubjectProxy{bg:orange}].svg"
+            />
+    <p class="fragment">
+        Every call to the <span class="proxy-color">SubjectProxy</span> would go directly
+        through the across the <span class="php-color">AdapterClient</span>
+        to the <span class="zf-color">RealSubject</span>
+    </p>
+</section>
+
+<section>
+    <h2><span class="proxy-color">Remote Object</span> example (1/3)</h2>
 <pre><code contenteditable>class Tweet {
     protected $data;
 
     public function __construct(array $data) {
-        $this->data = $data;
+    $this->data = $data;
     }
 
     public function getText() {
-        return $this->data['text'];
+    return $this->data['text'];
     }
-}</code></pre>
-                </section>
+    }</code></pre>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">remote object</span> example (2/3)</h2>
+<section>
+    <h2><span class="proxy-color">remote object</span> example (2/3)</h2>
 <pre><code contenteditable>class TweetProxy extends Tweet {
-    protected $api; protected $tweet; protected $id;
+    protected $api;
+    protected $id;
 
     public function __construct(TwitterApi $api, $id) {
-        $this->api = $api; $this->id = $id;
+    $this->api = $api;
+    $this->id  = $id;
     }
-    private function init() {
-        if ( ! $this->tweet) {
-            $this->tweet = new Tweet($this->api->get($this->id));
-        }
-    }
+
     public function getText() {
-        $this->init();
-        return $this->tweet->getText();
+    return $this->api->getTweetText($this->id);
     }
-}</code></pre>
-                </section>
+    }</code></pre>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">remote object</span> example (3/3)</h2>
+<section>
+    <h2><span class="proxy-color">remote object</span> example (3/3)</h2>
 <pre><code contenteditable>$tweet = new Tweet(array('text' => 'Proxies in PHP!'));
-var_dump($tweet->getText()); // 'Proxies in PHP!'
+    var_dump($tweet->getText()); // 'Proxies in PHP!'
 
-$api = new TwitterApi(/* yadda */); // zf, buzz, etc
+    $api         = new TwitterApi(/* yadda */); // buzz, guzzle, zend\http, etc
+    $remoteTweet = new TweetProxy($api, 280643708968386560);
+    var_dump($remoteTweet->getText()); // 'Tweet text!'
 
-$remoteTweet = new TweetProxy($api, 280643708968386560);
-var_dump($remoteTweet->getText()); // 'Tweet text!'
-$remoteTweet = new TweetProxy($api, 280643708968386561);
-var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
-                </section>
+    $remoteTweet = new TweetProxy($api, 280643708968386561);
+    var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">remote object</span> pros/cons</h2>
-                    <ul>
-                        <li>
-                            Advantages
-                            <ul>
-                                <li>Abstraction of a remote object</li>
-                                <li>You can re-define the proxied object's API locally</li>
-                            </ul>
-                        </li>
-                        <li>
-                            Dis-advantages
-                            <ul>
-                                <li>To use such a proxy, you almost always need a configured remote client</li>
-                                <li>Remote objects fail very easily</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </section>
+<section>
+    <h2><span class="proxy-color">remote object</span> pros/cons</h2>
+    <p class="fragment">Advantages</p>
+    <p class="fragment">
+        Share objects across multiple systems
+        <br/>
+        No local memory usage
+        <br/>
+        Can function as an adapter for a completely different remote object
+    </p>
+    <p class="fragment">Dis-advantages</p>
+    <p class="fragment">
+        Complex to setup
+        <br/>
+        Fails on adapter failure
+    </p>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">Smart reference</span></h2>
-                    <p>
-                        Smart reference can be used to:
-                    </p>
-                    <ul>
-                        <li>swap the proxied object at runtime</li>
-                        <li>reference singletons or use internal static registries</li>
-                        <li>Optimize memory usage</li>
-                    </ul>
-                </section>
+<section>
+    <h2><span class="proxy-color">Virtual Proxy</span></h2>
+    <p>
+        We may want to use lazy loading to avoid <abbr title="Input/Output">IO</abbr> operations
+        or heavy loading operation until really needed
+    </p>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">Smart Reference</span> with <span class="php-color">Weakref</span></h2>
-                    <p>
-                        Using <a href="http://php.net/manual/en/class.weakref.php" target="_blank">Weakref</a>
-                        to save memory on long-running processes
-                    </p>
-                    <pre><code contenteditable>class ImageProxy extends Image {
-    // [...] (see previous example)
-    private function init() {
-        if ( ! $this->imageRef || ! $this->imageRef->valid()) {
-            $this->imageRef = new WeakRef(new Image($this->path));
-        }
+<section>
+    <section>
+        <h2><span class="proxy-color">Lazy Loading</span> patterns</h2>
+        <ol>
+            <li>Virtual Object</li>
+            <li>Value Holder</li>
+            <li>Ghost Object</li>
+        </ol>
+    </section>
 
-        return $this->imageRef->get();
+    <section>
+        <h2><span class="proxy-color">Virtual Object</span></h2>
+        <p>
+            An object whose properties are all set to <code>null</code>, and where
+            each access to the properties is tracked.
+        </p>
+        <p>
+            Access triggers lazy loading on the property.
+        </p>
+    </section>
+
+    <section>
+        <h2><span class="proxy-color">Value Holder</span></h2>
+        <p>
+            An object that can hold an instance of the original proxied object, and loads it only
+            when needed.
+        </p>
+    </section>
+
+    <section>
+        <h2><span class="proxy-color">Ghost Object</span></h2>
+        <p>
+            An object whose properties are the same of the proxied object, but <code>null</code>.
+        </p>
+        <p>
+            Accessing any method causes loading of the properties.
+        </p>
+        <p>
+            <a class="doctrine-color" href="https://github.com/doctrine/common/tree/master/lib/Doctrine/Common/Proxy" target="_blank">Doctrine Proxies</a>
+            are <a class="php-color" href="https://gist.github.com/4038004" target="_blank">generated</a> this way.
+        </p>
+    </section>
+</section>
+
+<section>
+    <h2><span class="proxy-color">Value Holder</span> example (1/3)</h2>
+<pre><code contenteditable>class Image {
+    public function __construct($path) {
+    $this->image = imagecreatefromjpeg($path);
     }
 
     public function getSize() {
-        return $this->init()->getSize();
+    return array(imagesx($this->image), imagesy($this->image));
     }
-}</code></pre>
-                </section>
+    }</code></pre>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">Smart Reference</span> with a <span class="php-color">Registry</span></h2>
-                    <pre><code contenteditable>class ImageProxy extends Image {
-    // [...] (see previous example)
+<section>
+    <h2><span class="proxy-color">Value Holder</span> example (2/3)</h2>
+<pre><code contenteditable>class ImageProxy extends Image {
+    protected $image;
+    public function __construct($path) {
+    $this->path = $path;
+    }
+
     private function init() {
-        if (null === $this->image) {
-            $this->image = ImageRegistry::get($this->path);
-        }
+    if ( ! $this->image) {
+    $this->image = new Image($this->path);
+    }
     }
 
     public function getSize() {
-        $this->init();
-        return $this->image->getSize();
+    $this->init();
+    return $this->image->getSize();
     }
-}</code></pre>
-                </section>
-                <section>
-                    <h2><span class="proxy-color">Smart Reference</span> pros/cons</h2>
-                    <p>Mainly memory usage, but it depends on how you setup your "smart" reference</p>
-                </section>
+    }</code></pre>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">Protection proxy</span></h2>
-                    <p>
-                        Protection proxy comes into play when you want to transparently limit access to an API
-                        through a set of rules (ACL/limits)
-                    </p>
-                </section>
+<section>
+    <h2><span class="proxy-color">Value Holder</span> example (3/3)</h2>
+<pre><code contenteditable>$img1 = new ImageProxy('/path/to/image1.jpg');
+    var_dump(memory_get_usage()); // ~200Kb
+    $img2 = new ImageProxy('/path/to/image2.jpg');
+    var_dump(memory_get_usage()); // ~200Kb
+    $img3 = new ImageProxy('/path/to/image3.jpg');
+    var_dump(memory_get_usage()); // ~200Kb
 
-                <section>
-                    <h2><span class="proxy-color">Protection proxy</span> (1/2)</h2>
+    $size1 = $img1->getSize();
+    var_dump(memory_get_usage()); // ~4Mb
+    $size2 = $img2->getSize();
+    var_dump(memory_get_usage()); // ~8Mb</code></pre>
+</section>
+
+<section>
+    <h2><span class="proxy-color">lazy loading</span> pros/cons</h2>
+    <ul>
+        <li>
+            Advantages
+            <ul>
+                <li>Low memory impact</li>
+                <li>Low overhead</li>
+                <li>Easy to implement</li>
+                <li>Useful to determine object "dirty" status</li>
+            </ul>
+        </li>
+        <li>
+            Dis-advantages
+            <ul>
+                <li>Not optimal for data that is always loaded</li>
+                <li>Lazy loading means lazy failing</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+    <h2><span class="proxy-color">Smart reference</span></h2>
+    <p>
+        Smart reference can be used to:
+    </p>
+    <ul>
+        <li>swap the proxied object at runtime</li>
+        <li>reference singletons or use internal static registries</li>
+        <li>Optimize memory usage</li>
+    </ul>
+</section>
+
+<section>
+    <h2><span class="proxy-color">Smart Reference</span> with <span class="php-color">Weakref</span></h2>
+    <p>
+        Using <a href="http://php.net/manual/en/class.weakref.php" target="_blank">Weakref</a>
+        to save memory on long-running processes
+    </p>
+                    <pre><code contenteditable>class ImageProxy extends Image {
+                        // [...] (see previous example)
+                        private function init() {
+                        if ( ! $this->imageRef || ! $this->imageRef->valid()) {
+                        $this->imageRef = new WeakRef(new Image($this->path));
+                        }
+
+                        return $this->imageRef->get();
+                        }
+
+                        public function getSize() {
+                        return $this->init()->getSize();
+                        }
+                        }</code></pre>
+</section>
+
+<section>
+    <h2><span class="proxy-color">Smart Reference</span> with a <span class="php-color">Registry</span></h2>
+                    <pre><code contenteditable>class ImageProxy extends Image {
+                        // [...] (see previous example)
+                        private function init() {
+                        if (null === $this->image) {
+                        $this->image = ImageRegistry::get($this->path);
+                        }
+                        }
+
+                        public function getSize() {
+                        $this->init();
+                        return $this->image->getSize();
+                        }
+                        }</code></pre>
+</section>
+<section>
+    <h2><span class="proxy-color">Smart Reference</span> pros/cons</h2>
+    <p>Mainly memory usage, but it depends on how you setup your "smart" reference</p>
+</section>
+
+<section>
+    <h2><span class="proxy-color">Protection proxy</span></h2>
+    <p>
+        Protection proxy comes into play when you want to transparently limit access to an API
+        through a set of rules (ACL/limits)
+    </p>
+</section>
+
+<section>
+    <h2><span class="proxy-color">Protection proxy</span> (1/2)</h2>
                     <pre><code contenteditable>class RemoteApiProxy extends RemoteApi {
-    protected $count = 0;
-    public function __construct(RemoteApi $api, $limit) {
-        $this->api = $api; $this->limit = $limit;
-    }
+                        protected $count = 0;
+                        public function __construct(RemoteApi $api, $limit) {
+                        $this->api = $api; $this->limit = $limit;
+                        }
 
-    private function count() {
-        if (++$this->count > $this->limit) {
-            throw new RemoteApiLimit('STAHP!');
-        }
-    }
+                        private function count() {
+                        if (++$this->count > $this->limit) {
+                        throw new RemoteApiLimit('STAHP!');
+                        }
+                        }
 
-    public function doStuff() {
-        $this->count();
-        return $this->api->doStuff();
-    }
-}</code></pre>
-                </section>
+                        public function doStuff() {
+                        $this->count();
+                        return $this->api->doStuff();
+                        }
+                        }</code></pre>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">Protection proxy</span> (2/2)</h2>
+<section>
+    <h2><span class="proxy-color">Protection proxy</span> (2/2)</h2>
                     <pre><code contenteditable>$api = new RemoteApiProxy(new RemoteApi(/* ... */), 50);
 
-while (1) {
-    $api->doStuff(); // RemoteApiLimit exception!
-}</code></pre>
-                </section>
+                        while (1) {
+                        $api->doStuff(); // RemoteApiLimit exception!
+                        }</code></pre>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">Protection Proxy</span> pros/cons</h2>
-                    <ul>
-                        <li>
-                            Advantages
-                            <ul>
-                                <li>Transparent filtering or limiting of access to an object</li>
-                            </ul>
-                        </li>
-                        <li>
-                            Dis-advantages
-                            <ul>
-                                <li>Modifies proxied object behavior! More like a decorator!</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </section>
+<section>
+    <h2><span class="proxy-color">Protection Proxy</span> pros/cons</h2>
+    <ul>
+        <li>
+            Advantages
+            <ul>
+                <li>Transparent filtering or limiting of access to an object</li>
+            </ul>
+        </li>
+        <li>
+            Dis-advantages
+            <ul>
+                <li>Modifies proxied object behavior! More like a decorator!</li>
+            </ul>
+        </li>
+    </ul>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">Null object fallback proxy</span></h2>
-                    <p>
-                        A <span class="php-color">null object</span> is an object that implements 
-                        an interface, but produces no side effects. It replaces 
-                        <code class="php-color">null</code>.
-                    </p>
-                    <p>
-                        Using <span class="php-color">null objects</span> allows us to work with the 
-                        assumption that an object will always be available, reducing checks against 
-                        <code class="php-color">null</code> by a lot.
-                    </p>
-                </section>
+<section>
+    <h2><span class="proxy-color">Null object fallback proxy</span></h2>
+    <p>
+        A <span class="php-color">null object</span> is an object that implements
+        an interface, but produces no side effects. It replaces
+        <code class="php-color">null</code>.
+    </p>
+    <p>
+        Using <span class="php-color">null objects</span> allows us to work with the
+        assumption that an object will always be available, reducing checks against
+        <code class="php-color">null</code> by a lot.
+    </p>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">Null object fallback proxy</span> example</h2>
+<section>
+    <h2><span class="proxy-color">Null object fallback proxy</span> example</h2>
                     <pre><code contenteditable>class CustomerProxy extends Customer {
-    public function __construct(Db $db, $id) {
-        $this->customer = $db->find($id);
+                        public function __construct(Db $db, $id) {
+                        $this->customer = $db->find($id);
 
-        if ( ! $this->customer) {
-            $this->customer = new NullCustomer();
-        }
-    }
+                        if ( ! $this->customer) {
+                        $this->customer = new NullCustomer();
+                        }
+                        }
 
-    public function doStuff() {
-        return $this->customer->doStuff();
-    }
-}</code></pre>
-                </section>
+                        public function doStuff() {
+                        return $this->customer->doStuff();
+                        }
+                        }</code></pre>
+</section>
 
-                <section>
-                    <h2><span class="proxy-color">Null object fallback proxy</span> pros</h2>
-                    <ul>
-                        <li>Performance (with small # of instances)</li>
-                        <li>Reduced NPaths, therefore code is easier to test</li>
-                    </ul>
-                </section>
+<section>
+    <h2><span class="proxy-color">Null object fallback proxy</span> pros</h2>
+    <ul>
+        <li>Performance (with small # of instances)</li>
+        <li>Reduced NPaths, therefore code is easier to test</li>
+    </ul>
+</section>
 
-                <section>
-                    <h2><span class="php-color">AOP</span> and <span class="proxy-color">proxies</span></h2>
-                    <p>
-                        Proxies basically enable us to have logic between us and any object, making
-                        AOP easy even when the language doesn't allow it.
-                    </p>
-                    <p>
-                        We can use code generation to create on-the-fly proxies with our custom AOP logic
-                        executed pre- and post- any method of the proxied object.
-                    </p>
-                </section>
+<section>
+    <h2><span class="php-color">AOP</span> and <span class="proxy-color">proxies</span></h2>
+    <p>
+        Proxies basically enable us to have logic between us and any object, making
+        AOP easy even when the language doesn't allow it.
+    </p>
+    <p>
+        We can use code generation to create on-the-fly proxies with our custom AOP logic
+        executed pre- and post- any method of the proxied object.
+    </p>
+</section>
 
-                <section>
-                    <h2><span class="php-color">AOP</span> examples</h2>
+<section>
+    <h2><span class="php-color">AOP</span> examples</h2>
 <pre><code contenteditable>/**
- * @AOP\Cache(ttl=3600)
- */
-public function doHeavyStuff() {
+    * @AOP\Cache(ttl=3600)
+    */
+    public function doHeavyStuff() {
     // [...]
-}</code></pre>
-<p>Becomes:</p>
+    }</code></pre>
+    <p>Becomes:</p>
 <pre><code contenteditable>public function doHeavyStuff() {
     if($cached = $this->cache->get('doHeavyStuff', func_get_args())) {
-        return $cached;
+    return $cached;
     }
 
     $return = $this->originalObject->doHeavyStuff();
     $this->cache->set($return, 'doHeavyStuff', func_get_args());
 
     return $return;
-}</code></pre>
-                </section>
+    }</code></pre>
+</section>
 
-                <section>
-                    <h2>Implementation details in <span class="php-color">PHP</span></h2>
-                </section>
+<section>
+    <h2>Implementation details in <span class="php-color">PHP</span></h2>
+</section>
 
-                <section>
-                    <h2>Implementing the public API</h2>
-                    <ol>
-                        <li>The Proxy class MUST extend the proxied class</li>
-                        <li>Each of the proxied methods must be rewritten</li>
-                        <li>Proxies should be serializable</li>
-                        <li>Proxies should handle public properties</li>
-                    </ol>
-                </section>
+<section>
+    <h2>Implementing the public API</h2>
+    <ol>
+        <li>The Proxy class MUST extend the proxied class</li>
+        <li>Each of the proxied methods must be rewritten</li>
+        <li>Proxies should be serializable</li>
+        <li>Proxies should handle public properties</li>
+    </ol>
+</section>
 
-                <section>
-                    <h2>Public properties proxying</h2>
+<section>
+    <h2>Public properties proxying</h2>
                     <pre><code contenteditable>class Customer {
-    public $name;
-    public $surname;
-}</code></pre>
+                        public $name;
+                        public $surname;
+                        }</code></pre>
                     <pre><code contenteditable>class CustomerProxy extends Customer {
-    public function __construct(Customer $customer) {
-        unset($this->name, $this->surname);
-        $this->customer = $customer;
-    }
+                        public function __construct(Customer $customer) {
+                        unset($this->name, $this->surname);
+                        $this->customer = $customer;
+                        }
 
-    public function __set($name, $value) {
-        $this->customer->$name = $value;
-    }
-    public function __get($name) {
-        return $this->customer->$name;
-    }
-    // __isset, __unset
-}</code></pre>
-                </section>
-                
-                <section>
-                    <h2>A complete <span class="proxy-color">Ghost Object</span> implementation</h2>
-                    <p>
-                        <a href="https://gist.github.com/4038004" target="_blank">https://gist.github.com/4038004</a>
-                    </p>
-                </section>
+                        public function __set($name, $value) {
+                        $this->customer->$name = $value;
+                        }
+                        public function __get($name) {
+                        return $this->customer->$name;
+                        }
+                        // __isset, __unset
+                        }</code></pre>
+</section>
 
-                <section>
-                    <h2>Some useful <span class="php-color">libraries</span></h2>
-                    <p>
-                        <ul>
-                            <li><a href="http://flow.typo3.org/" target="_blank">http://flow.typo3.org</a></li>
-                            <li><a href="https://github.com/schmittjoh/cg-library/" target="_blank">https://github.com/schmittjoh/cg-library</a></li>
-                            <li><a href="https://github.com/doctrine/common/" target="_blank">https://github.com/doctrine/common</a></li>
-                            <li><a href="https://github.com/lisachenko/go-aop-php/" target="_blank">https://github.com/lisachenko/go-aop-php</a></li>
-                        </ul>
-                    </p>
-                </section>
-                
-                <section>
-                    <h2>Code generation</h2>
-                    <p>
-                        See
-                        <a href="https://github.com/doctrine/common/blob/master/lib/Doctrine/Common/Proxy/ProxyGenerator.php">
-                            Doctrine's Proxy Generator
-                        </a>
-                    </p>
-                </section>
+<section>
+    <h2>A complete <span class="proxy-color">Ghost Object</span> implementation</h2>
+    <p>
+        <a href="https://gist.github.com/4038004" target="_blank">https://gist.github.com/4038004</a>
+    </p>
+</section>
 
-                <section>
-                    <h2>Questions?</h2>
-                </section>
-            </div>
+<section>
+    <h2>Some useful <span class="php-color">libraries</span></h2>
+    <p>
+    <ul>
+        <li><a href="http://flow.typo3.org/" target="_blank">http://flow.typo3.org</a></li>
+        <li><a href="https://github.com/schmittjoh/cg-library/" target="_blank">https://github.com/schmittjoh/cg-library</a></li>
+        <li><a href="https://github.com/doctrine/common/" target="_blank">https://github.com/doctrine/common</a></li>
+        <li><a href="https://github.com/lisachenko/go-aop-php/" target="_blank">https://github.com/lisachenko/go-aop-php</a></li>
+    </ul>
+    </p>
+</section>
+
+<section>
+    <h2>Code generation</h2>
+    <p>
+        See
+        <a href="https://github.com/doctrine/common/blob/master/lib/Doctrine/Common/Proxy/ProxyGenerator.php">
+            Doctrine's Proxy Generator
+        </a>
+    </p>
+</section>
+
+<section>
+    <h2>Questions?</h2>
+</section>
+</div>
 
 
-        </div>
+</div>
 
-        <script src="reveal.js/lib/js/head.min.js"></script>
-        <script src="reveal.js/js/reveal.min.js"></script>
+<script src="reveal.js/lib/js/head.min.js"></script>
+<script src="reveal.js/js/reveal.min.js"></script>
 
-        <script>
+<script>
 
-            // Full list of configuration options available here:
-            // https://github.com/hakimel/reveal.js#configuration
-            Reveal.initialize({
-                controls: true,
-                progress: true,
-                history: true,
-                center: true,
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
 
-                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-                transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
 
-                // Optional libraries used to extend on reveal.js
-                dependencies: [
-                    { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-                    { src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                    { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-                    { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-                    { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-                    { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-                    // { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
-                ]
-            });
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+            { src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+            { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+            { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+            // { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+    });
 
-        </script>
+</script>
 
-    </body>
+</body>
 </html>
