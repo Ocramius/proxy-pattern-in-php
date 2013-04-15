@@ -244,9 +244,6 @@
         Performs additional actions when the subject is accessed
     </p>
 </section>
-<section>
-    Smart reference is actually DecoratorPattern - good for AOP
-</section>
 
 <section>
     <h2><span class="proxy-color">Remote Proxy</span></h2>
@@ -505,7 +502,14 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
     <p class="fragment cons-line">May require reflection to access parent class's properties</p>
     <p class="fragment cons-line">Not optimal for data that is always loaded</p>
     <p class="fragment cons-line">Lazy loading means lazy failing</p>
-    <p class="fragment cons-line">Actually, not the same object as <span class="php-color">RealSubject</span> (different identity)</p>
+</section>
+
+<section>
+    <h2>A complete <span class="proxy-color">Ghost Object</span> implementation</h2>
+    <p>
+        A complete implementation example at
+        <a href="https://gist.github.com/4038004" target="_blank">https://gist.github.com/4038004</a>
+    </p>
 </section>
 
 <!-- @todo re-introduce example with weakref? -->
@@ -515,9 +519,9 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
     <h2><span class="proxy-color">Protection proxy</span></h2>
     <p>
         A <span class="proxy-color">Protection Proxy</span> comes into play when you want to transparently
-        limit access to an API through a set of rules (ACL/limits/custom logic). It actually is a decorator
-        to the proxied <span class="php-color">RealSubject</span>.
+        limit access to an API through a set of rules (ACL/limits/custom logic).
     </p>
+    <p class="fragment">It actually is a decorator to the proxied <span class="php-color">RealSubject</span>.</p>
 </section>
 
 <section>
@@ -542,14 +546,6 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 </section>
 
 <section>
-    <h2>A complete <span class="proxy-color">Ghost Object</span> implementation</h2>
-    <p>
-        A complete implementation example at
-        <a href="https://gist.github.com/4038004" target="_blank">https://gist.github.com/4038004</a>
-    </p>
-</section>
-
-<section>
     <h2><span class="proxy-color">Protection proxy</span> (2/2)</h2>
     <pre><code contenteditable>$api = new RemoteApiProxy(new RemoteApi(/* ... */), 50);
 
@@ -570,6 +566,10 @@ while (true) {
         A <span class="proxy-color">Smart reference</span> executes additional operations when the
         <span class="">RealSubject</span> is accessed
     </p>
+    <p class="fragment">
+        Smart reference is actually <span class="php-color">DecoratorPattern</span>
+    </p>
+    <p class="fragment">Good for <span class="php-color">AOP</span></p>
 </section>
 <section>
     <h2><span class="proxy-color">Smart reference</span> use cases</h2>
@@ -620,9 +620,7 @@ while (true) {
     <ol>
         <li class="fragment">The Proxy class MUST extend the proxied class</li>
         <li class="fragment">Each of the proxied methods SHOULD be rewritten</li>
-        <li class="fragment">Access to public properties SHOULD be intercepted</li>
-        <li class="fragment">Proxies SHOULD be serializable/cloneable</li>
-        <li class="fragment">Proxies SHOULD handle public properties</li>
+        <li class="fragment">Access to public properties SHOULD be intercepted<
     </ol>
 </section>
 
@@ -653,6 +651,12 @@ while (true) {
 <section>
     <h2>Introducing <span class="proxy-color">ProxyManager</span></h2>
     <p class="fragment">
+        <img
+            src="assets/img/gh.svg"
+            alt="Ocramius on Github"
+            height="40px"
+            style="margin: 0;"
+        />
         <a href="https://github.com/Ocramius/ProxyManager" target="_blank">https://github.com/Ocramius/ProxyManager</a>
     </p>
     <p class="fragment">A library to avoid bringing out the generated garbage yourself</p>
@@ -754,14 +758,26 @@ $proxy->doFoo();</code></pre>
 <section>
     <h2>CG-Library</h2>
     <p>
-        <a href="https://github.com/schmittjoh/cg-library/" target="_blank">https://github.com/schmittjoh/cg-library</a>
+        <img
+            src="assets/img/gh.svg"
+            alt="Ocramius on Github"
+            height="40px"
+            style="margin: 0;"
+        />
+        <a href="https://github.com/schmittjoh/cg-library/" target="_blank">schmittjoh/cg-library</a>
     </p>
     <p class="fragment">Utilities if you want to write your own <span class="proxy-color">proxy generator</span></p>
 </section>
 <section>
     <h2>GO AOP PHP</h2>
     <p>
-        <a href="https://github.com/lisachenko/go-aop-php/" target="_blank">https://github.com/lisachenko/go-aop-php</a>
+        <img
+            src="assets/img/gh.svg"
+            alt="Ocramius on Github"
+            height="40px"
+            style="margin: 0;"
+        />
+        <a href="https://github.com/lisachenko/go-aop-php/" target="_blank">lisachenko/go-aop-php</a>
     </p>
     <p class="fragment">
         Uses <span class="proxy-color">proxies</span> for <span class="php-color">AOP</span> purposes
@@ -779,6 +795,13 @@ $proxy->doFoo();</code></pre>
     <h2>Thank you!</h2>
     <p>
         Fork the slides!
+        <br/>
+        <img
+            src="assets/img/gh.svg"
+            alt="Ocramius on Github"
+            height="40px"
+            style="margin: 0;"
+        />
         <a href="https://github.com/Ocramius/proxy-pattern-in-php" target="_blank">
             Ocramius/proxy-pattern-in-php
         </a>
