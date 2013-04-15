@@ -84,7 +84,7 @@
 <section>
     <h2>
         <img src="assets/img/ocramius.gif" alt="Marco Pivetta" style="width: 60px; margin: 0;"/>
-        Marco Pivetta
+        <a href="http://ocramius.github.com/" target="_blank">Marco Pivetta</a>
     </h2>
     <p class="fragment">
         <img
@@ -122,6 +122,26 @@
         />
         <a href="http://twitter.com/Ocramius" target="_blank">Ocramius</a>
     </p>
+</section>
+
+<section>
+    <section>
+        <h2>Current projects</h2>
+        <p>
+            <a target="_blank" href="https://github.com/Ocramius/ProxyManager">ProxyManager</a>,
+            <a target="_blank" href="https://github.com/bjyoungblood/BjyAuthorize">BjyAuthorize</a>,
+            <a target="_blank" href="https://github.com/RWOverdijk/AssetManager">AssetManager</a>,
+            <a target="_blank" href="https://github.com/BinaryKitten/ZeffMu">ZeffMu</a>,
+            <a target="_blank" href="https://github.com/zf-fr/ZfrRest">ZfrRest</a>,
+            <a target="_blank" href="https://github.com/Ocramius/OcraDiCompiler">OcraDiCompiler</a>,
+            <a target="_blank" href="https://github.com/Ocramius/OcraServiceManager">OcraServiceManager</a>,
+            <a target="_blank" href="https://github.com/Ocramius/OcraCachedViewResolver">OcraCachedViewResolver</a>,
+            <a target="_blank" href="https://github.com/doctrine/DoctrineModule">DoctrineModule</a>,
+            <a target="_blank" href="https://github.com/doctrine/DoctrineORMModule">DoctrineORMModule</a>,
+            <a target="_blank" href="https://github.com/doctrine/DoctrineMongoODMModule">DoctrineMongoODMModule</a>,
+            <a target="_blank" href="https://github.com/Ocramius/VersionEyeModule">VersionEyeModule</a>
+        </p>
+    </section>
 </section>
 
 <section>
@@ -231,10 +251,10 @@
 <section>
     <h2><span class="proxy-color">Remote Proxy</span></h2>
     <img
-            class="fragment"
-            alt="Remote Object Proxy UML"
-            src="http://yuml.me/diagram/plain;dir:LR;/class/[RealSubject{bg:green}]<-.- uses[AdapterServer{bg:blue}],[AdapterServer{bg:blue}]intertubes-intertubes[AdapterClient{bg:blue}],[AdapterClient{bg:blue}]<-.- uses[SubjectProxy{bg:orange}].svg"
-            />
+        class="fragment"
+        alt="Remote Object Proxy UML"
+        src="http://yuml.me/diagram/plain;dir:LR;/class/[RealSubject{bg:green}]<-.- uses[AdapterServer{bg:blue}],[AdapterServer{bg:blue}]intertubes-intertubes[AdapterClient{bg:blue}],[AdapterClient{bg:blue}]<-.- uses[SubjectProxy{bg:orange}].svg"
+    />
     <p class="fragment">
         Every call to the <span class="proxy-color">SubjectProxy</span> would go directly
         through the across the <span class="php-color">AdapterClient</span>
@@ -279,7 +299,7 @@
 <pre><code contenteditable>$tweet = new Tweet(array('text' => 'Proxies in PHP!'));
 var_dump($tweet->getText()); // 'Proxies in PHP!'
 
-$api         = new TwitterApi(/* yadda */); // buzz, guzzle, zend\http, etc
+$api = new TwitterApi(/* yadda */); // buzz, guzzle, zf
 $remoteTweet = new TweetProxy($api, 280643708968386560);
 var_dump($remoteTweet->getText()); // 'Tweet text!'
 
@@ -319,15 +339,13 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
         $this->id = $id;
     }
 
-    public function init()
-    {
+    public function init() {
         if (!isset($this->data)) {
             $this->data = $this->db->load($this->id);
         }
     }
 
-    public function getName()
-    {
+    public function getName() {
         $this->init();
         return $this->data['name'];
     }
@@ -407,15 +425,15 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
         $this->path = $path;
     }
 
+    public function getSize() {
+        $this->init();
+        return $this->wrapped->getSize();
+    }
+
     private function init() {
         if ( ! $this->wrapped) {
             $this->wrapped = new Image($this->path);
         }
-    }
-
-    public function getSize() {
-        $this->init();
-        return $this->wrapped->getSize();
     }
 }</code></pre>
 </section>
@@ -458,23 +476,21 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 
 <section>
     <h2><span class="proxy-color">Ghost Object</span> example (simplified)</h2>
-<pre><code contenteditable>class ImageVirtualProxy extends Image {
+<pre><code contenteditable>class ImageGhostProxy extends Image {
     protected $initialized = false;
     public function __construct($path) {
         $this->path = $path;
     }
-
-    private function init() {
-        if ( ! $this->initialized) {
-            $image = new Image($this->path);
-            $this->image = $image->image;
-            $this->initialized = true;
-        }
-    }
-
     public function getSize() {
         $this->init();
         return parent::getSize();
+    }
+    private function init() {
+        if ( ! $this->initialized) {
+            $image             = new Image($this->path);
+            $this->image       = $image->image;
+            $this->initialized = true;
+        }
     }
 }</code></pre>
 </section>
@@ -512,24 +528,32 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
         $this->api = $api; $this->limit = $limit;
     }
 
+    public function doStuff() {
+        $this->count();
+        return $this->api->doStuff();
+    }
+
     private function count() {
         if (++$this->count > $this->limit) {
             throw new RemoteApiLimit('STAHP!');
         }
     }
-
-    public function doStuff() {
-        $this->count();
-        return $this->api->doStuff();
-    }
 }</code></pre>
+</section>
+
+<section>
+    <h2>A complete <span class="proxy-color">Ghost Object</span> implementation</h2>
+    <p>
+        A complete implementation example at
+        <a href="https://gist.github.com/4038004" target="_blank">https://gist.github.com/4038004</a>
+    </p>
 </section>
 
 <section>
     <h2><span class="proxy-color">Protection proxy</span> (2/2)</h2>
     <pre><code contenteditable>$api = new RemoteApiProxy(new RemoteApi(/* ... */), 50);
 
-    while (1) {
+while (true) {
     $api->doStuff(); // RemoteApiLimit exception!
 }</code></pre>
 </section>
@@ -588,15 +612,17 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 
 <section>
     <h2>Implementation details in <span class="php-color">PHP</span></h2>
+    <p class="fragment">What do we need to build a <span class="proxy-color">proxy</span>?</p>
 </section>
 
 <section>
-    <h2>Implementing the public API of a <span class="proxy-color">Proxy</span></h2>
+    <h2>Implementing a (generic) <span class="proxy-color">Proxy</span></h2>
     <ol>
         <li class="fragment">The Proxy class MUST extend the proxied class</li>
-        <li class="fragment">Each of the proxied methods must be rewritten</li>
-        <li class="fragment">Proxies should be serializable/cloneable safely</li>
-        <li class="fragment">Proxies should handle public properties</li>
+        <li class="fragment">Each of the proxied methods SHOULD be rewritten</li>
+        <li class="fragment">Access to public properties SHOULD be intercepted</li>
+        <li class="fragment">Proxies SHOULD be serializable/cloneable</li>
+        <li class="fragment">Proxies SHOULD handle public properties</li>
     </ol>
 </section>
 
@@ -624,26 +650,79 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 }</code></pre>
 </section>
 
-<!-- @todo add initializer example? -->
-<!-- @todo add proxy-manager examples -->
-
 <section>
-    <h2>A complete <span class="proxy-color">Ghost Object</span> implementation</h2>
-    <p>
-        <a href="https://gist.github.com/4038004" target="_blank">https://gist.github.com/4038004</a>
+    <h2>Introducing <span class="proxy-color">ProxyManager</span></h2>
+    <p class="fragment">
+        <a href="https://github.com/Ocramius/ProxyManager" target="_blank">https://github.com/Ocramius/ProxyManager</a>
     </p>
+    <p class="fragment">A library to avoid bringing out the generated garbage yourself</p>
+    <p class="fragment">Handles various types of <span class="proxy-color">proxy</span></p>
+    <p class="fragment">Handles various types of proxy</p>
 </section>
 
 <section>
-    <h2>Some useful <span class="php-color">libraries</span></h2>
-    <ul>
-        <li><a href="http://flow.typo3.org/" target="_blank">http://flow.typo3.org</a></li>
-        <li><a href="http://flow.typo3.org/" target="_blank">http://flow.typo3.org</a></li>
-        <li><a href="https://github.com/schmittjoh/cg-library/" target="_blank">https://github.com/schmittjoh/cg-library</a></li>
-        <li><a href="https://github.com/doctrine/common/" target="_blank">https://github.com/doctrine/common</a></li>
-        <li><a href="https://github.com/lisachenko/go-aop-php/" target="_blank">https://github.com/lisachenko/go-aop-php</a></li>
-    </ul>
+    <h2><span class="php-color">Lazy loading</span> with the <span class="proxy-color">ProxyManager</span></h2>
+    <pre class="fragment"><code contenteditable>namespace My\Slow;
+
+class Foo
+{
+    public function __construct()
+    {
+        sleep(10);
+    }
+
+    public function doFoo()
+    {
+        echo 'foo!';
+    }
+}</code></pre>
+
 </section>
+
+<section>
+    <h2><span class="php-color">Lazy loading</span> with the <span class="proxy-color">ProxyManager</span></h2>
+    <pre class="fragment"><code contenteditable>require_once 'vendor/autoload.php';
+use ProxyManager\Factory\LazyLoadingValueHolderFactory;
+
+$c = new ProxyManager\Configuration();
+$f = new LazyLoadingValueHolderFactory($c);
+
+$proxy = $f->createProxy(
+    'My\Slow\Foo',
+    function (& $wrappedObject, $proxy) {
+        $wrappedObject = new HeavyComplexObject();
+
+        $proxy->setProxyInitializer(null);
+
+        return true;
+    }
+);
+
+$proxy->doFoo();</code></pre>
+</section>
+
+<section>
+    <h2><span class="php-color">Smart Reference</span> with the <span class="proxy-color">ProxyManager</span></h2>
+    <pre class="fragment"><code contenteditable>require_once 'vendor/autoload.php';
+use ProxyManager\Factory\AccessInterceptorValueHolderFactory;
+
+$c = new ProxyManager\Configuration();
+$f = new AccessInterceptorValueHolderFactory($config);
+$proxy = $factory->createProxy(
+    new \My\Db\Connection(),
+    array('query' => function () {
+        echo "Query being executed!\n";
+    }),
+    array('query' => function () {
+        echo "Query completed!\n";
+    })
+);
+
+$proxy->doFoo();</code></pre>
+    <p class="fragment">Yes, I'm no good at naming classes</p>
+</section>
+
+<!-- @todo add initializer example? -->
 
 <section>
     <h2>Code generation</h2>
@@ -653,23 +732,82 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
             Doctrine's Proxy Generator
         </a>
         and
-        <a href="https://github.com/ocramius/ProxyManager">
-            ProxyManager
-        </a>
+        <a href="https://github.com/ocramius/ProxyManager">ProxyManager</a>
+    </p>
+</section>
+
+<section>
+    <h2>Some useful <span class="php-color">libraries</span></h2>
+</section>
+
+<section>
+    <h2>Flow3</h2>
+    <p><a href="http://flow.typo3.org/" target="_blank">http://flow.typo3.org</a></p>
+    <p class="fragment">
+        First implementation of <span class="php-color">annotations</span> in PHP
+        <span style="font-size: small;">(<abbr title="as far as I know">afaik</abbr>)</span>
+    </p>
+    <p class="fragment">
+        Usage of <span class="proxy-color">proxies</span> in the <abbr title="Dependency Injection Container">DIC</abbr>
+    </p>
+</section>
+<section>
+    <h2>CG-Library</h2>
+    <p>
+        <a href="https://github.com/schmittjoh/cg-library/" target="_blank">https://github.com/schmittjoh/cg-library</a>
+    </p>
+    <p class="fragment">Utilities if you want to write your own <span class="proxy-color">proxy generator</span></p>
+</section>
+<section>
+    <h2>GO AOP PHP</h2>
+    <p>
+        <a href="https://github.com/lisachenko/go-aop-php/" target="_blank">https://github.com/lisachenko/go-aop-php</a>
+    </p>
+    <p class="fragment">
+        Uses <span class="proxy-color">proxies</span> for <span class="php-color">AOP</span> purposes
+    </p>
+    <p class="fragment">
+        Very interesting usage of <span class="php-color">autoloaders</span>!
     </p>
 </section>
 
 <section>
     <h2>Questions?</h2>
 </section>
+
+<section>
+    <h2>Thank you!</h2>
+    <p>
+        Fork the slides!
+        <a href="https://github.com/Ocramius/proxy-pattern-in-php" target="_blank">
+            Ocramius/proxy-pattern-in-php
+        </a>
+    </p>
+    <p>
+        <img
+            src="assets/img/gh.svg"
+            alt="Ocramius on Github"
+            height="40px"
+            style="margin: 0;"
+        />
+        <a href="http://github.com/Ocramius" target="_blank">Ocramius</a>
+    </p>
+    <p>
+        <img
+            src="assets/img/twitter.svg"
+            alt="Ocramius on Twitter"
+            height="30px"
+            style="margin: 0;"
+        />
+        <a href="http://twitter.com/Ocramius" target="_blank">Ocramius</a>
+    </p>
+</section>
+
 </div>
-
-
 </div>
 
 <script src="reveal.js/lib/js/head.min.js"></script>
 <script src="reveal.js/js/reveal.min.js"></script>
-
 <script>
 
     // Full list of configuration options available here:
@@ -681,7 +819,7 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
         center: true,
 
         theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+        transition: Reveal.getQueryHash().transition || 'page', // default/cube/page/concave/zoom/linear/none
 
         // Optional libraries used to extend on reveal.js
         dependencies: [
