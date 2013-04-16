@@ -336,15 +336,15 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
         $this->id = $id;
     }
 
+    public function getName() {
+        $this->init();
+        return $this->data['name'];
+    }
+
     public function init() {
         if (!isset($this->data)) {
             $this->data = $this->db->load($this->id);
         }
-    }
-
-    public function getName() {
-        $this->init();
-        return $this->data['name'];
     }
 }</code></pre>
 
@@ -378,20 +378,6 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
         lazy-loaded instance on demand.
     </p>
 </section>
-
-    <section>
-        <h2><span class="proxy-color">Ghost Object</span></h2>
-        <p>
-            An object whose properties are the same of the proxied object, but <code>null</code>.
-        </p>
-        <p>
-            Accessing any method causes loading of the properties.
-        </p>
-        <p>
-            <a class="doctrine-color" href="https://github.com/doctrine/common/tree/master/lib/Doctrine/Common/Proxy" target="_blank">Doctrine Proxies</a>
-            are <a class="php-color" href="https://gist.github.com/4038004" target="_blank">generated</a> this way.
-        </p>
-    </section>
 
 <section>
     <h2><span class="proxy-color">Virtual Proxy</span></h2>
@@ -463,11 +449,16 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 
 <section>
     <h2><span class="proxy-color">Ghost Object</span></h2>
-
+    <p class="fragment">
+        An object whose properties are the same of the proxied object, but <code>null</code>.
+    </p>
+    <p class="fragment">
+        Accessing any method causes loading of the properties.
+    </p>
     <p class="fragment">Useful when the identity of the object has to be preserved</p>
     <p class="fragment">
-        A common example are <a href="https://github.com/doctrine/common/pull/168" target="_blank">Doctrine Proxies</a>
-        (<a class="php-color" href="https://gist.github.com/4038004" target="_blank">generated</a>)
+        <a class="doctrine-color" href="https://github.com/doctrine/common/tree/master/lib/Doctrine/Common/Proxy" target="_blank">Doctrine Proxies</a>
+        are <a class="php-color" href="https://gist.github.com/4038004" target="_blank">generated</a> this way.
     </p>
 </section>
 
@@ -547,7 +538,7 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 
 <section>
     <h2><span class="proxy-color">Protection proxy</span> (2/2)</h2>
-    <pre><code contenteditable>$api = new RemoteApiProxy(new RemoteApi(/* ... */), 50);
+    <pre><code contenteditable>$api = new APIProtectionProxy(new API(/* ... */), 50);
 
 while (true) {
     $api->doStuff(); // RemoteApiLimit exception!
@@ -620,7 +611,7 @@ while (true) {
     <ol>
         <li class="fragment">The Proxy class MUST extend the proxied class</li>
         <li class="fragment">Each of the proxied methods SHOULD be rewritten</li>
-        <li class="fragment">Access to public properties SHOULD be intercepted<
+        <li class="fragment">Access to public properties SHOULD be intercepted</li>
     </ol>
 </section>
 
@@ -661,7 +652,9 @@ while (true) {
     </p>
     <p class="fragment">A library to avoid bringing out the generated garbage yourself</p>
     <p class="fragment">Handles various types of <span class="proxy-color">proxy</span></p>
-    <p class="fragment">Handles various types of proxy</p>
+    <p class="fragment">
+        Currently <span class="proxy-color">Virtual Proxy</span> and <span class="proxy-color">Smart Reference</span>
+    </p>
 </section>
 
 <section>
@@ -694,10 +687,8 @@ $f = new LazyLoadingValueHolderFactory($c);
 $proxy = $f->createProxy(
     'My\Slow\Foo',
     function (& $wrappedObject, $proxy) {
-        $wrappedObject = new HeavyComplexObject();
-
+        $wrappedObject = new My\Slow\Foo();
         $proxy->setProxyInitializer(null);
-
         return true;
     }
 );
@@ -712,7 +703,7 @@ use ProxyManager\Factory\AccessInterceptorValueHolderFactory;
 
 $c = new ProxyManager\Configuration();
 $f = new AccessInterceptorValueHolderFactory($config);
-$proxy = $factory->createProxy(
+$db = $factory->createProxy(
     new \My\Db\Connection(),
     array('query' => function () {
         echo "Query being executed!\n";
@@ -722,7 +713,7 @@ $proxy = $factory->createProxy(
     })
 );
 
-$proxy->doFoo();</code></pre>
+$db->query();</code></pre>
     <p class="fragment">Yes, I'm no good at naming classes</p>
 </section>
 
