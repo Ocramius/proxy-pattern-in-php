@@ -1,0 +1,44 @@
+.reveal section img {
+    border: 0;
+    background: none;
+    box-shadow: 0 0 #000;
+}
+
+.php-color {
+    color: #6C7EB7;
+}
+
+.proxy-color {
+    color: #FC6A31;
+}
+
+.zf-color {
+    color: #68B604;
+}
+
+.doctrine-color {
+    color: #FC6A31;
+}
+
+.soothe .reveal .state-background {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.pros-line:before, .cons-line:before {
+    content: ' ';
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: -40px;
+    border: 12px solid transparent;
+}
+
+.pros-line:before {
+    border-bottom-width: 22px;
+    border-bottom-color: green;
+}
+
+.cons-line:before {
+    border-top-width: 22px;
+    border-top-color: red;
+}

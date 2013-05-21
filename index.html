@@ -1,127 +1,80 @@
 <!doctype html>
 <html lang="en" xmlns="http://www.w3.org/1999/html">
-
 <head>
-    <meta charset="utf-8">
-
+    <meta charset="utf-8" />
     <title>OOP Proxies in PHP</title>
-
-    <meta name="description" content="The Proxy OOP Pattern in PHP: how to use it and how to know when we need it">
-    <meta name="author" content="Marco Pivetta">
+    <meta name="description" content="The Proxy OOP Pattern in PHP: how to use it and how to know when we need it" />
+    <meta name="author" content="Marco Pivetta" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="stylesheet" href="reveal.js/css/reveal.min.css">
-    <link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme">
-    <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css">
+    <link rel="stylesheet" href="reveal.js/css/reveal.min.css" />
+    <link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme" />
+    <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css" />
     <script>
         document.write(
-                '<link rel="stylesheet" href="reveal.js/css/print/'
-                        + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' )
-                        + '.css" type="text/css" media="print">'
+            '<link rel="stylesheet" href="reveal.js/css/print/'
+            + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' )
+            + '.css" type="text/css" media="print">'
         );
     </script>
     <!--[if lt IE 9]><script src="reveal.js/lib/js/html5shiv.js"></script><![endif]-->
-
-    <style type="text/css">
-        .reveal section img {
-            border: 0;
-            background: none;
-            box-shadow: 0 0 #000;
-        }
-
-        .php-color {
-            color: #6C7EB7;
-        }
-
-        .proxy-color {
-            color: #FC6A31;
-        }
-
-        .zf-color {
-            color: #68B604;
-        }
-
-        .doctrine-color {
-            color: #FC6A31;
-        }
-
-        .soothe .reveal .state-background {
-            background: rgba(255, 255, 255, 0.6);
-        }
-
-        .pros-line:before, .cons-line:before {
-            content: ' ';
-            position: absolute;
-            width: 0;
-            height: 0;
-            left: -40px;
-            border: 12px solid transparent;
-        }
-
-        .pros-line:before {
-            border-bottom-width: 22px;
-            border-bottom-color: green;
-        }
-
-        .cons-line:before {
-            border-top-width: 22px;
-            border-top-color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/style.css" />
 </head>
-
 <body>
 <div class="reveal">
 <div class="slides">
 
+<section style="visibility:hidden;"></section>
 <section>
-    <h1>
-        The <span class="proxy-color">Proxy Pattern</span>
-        <br/>
-        in <span class="php-color" style="font-size: 120%;">PHP</span>
-    </h1>
+    <h2>
+        <img src="assets/img/ocramius.gif" alt="Marco Pivetta" style="height: 70px; margin: 0;"/>
+        <a href="http://ocramius.github.com/" target="_blank">Marco Pivetta</a>
+    </h2>
 </section>
 <section>
     <h2>
-        <img src="assets/img/ocramius.gif" alt="Marco Pivetta" style="width: 60px; margin: 0;"/>
-        <a href="http://ocramius.github.com/" target="_blank">Marco Pivetta</a>
+        <img src="assets/img/ocramius.gif" alt="Marco Pivetta" style="height: 70px; margin: 0;"/>
+        <a href="http://ocramius.github.com/" target="_blank">Ocramius</a>
     </h2>
-    <p class="fragment">
+</section>
+<section>
+    <h2>
         <img
             src="assets/img/doctrine.svg"
             alt="Doctrine Project" border="0"
-            height="40px"
-            style="margin: 0;"
+            height="100px"
+            style="margin: -13px;"
         />
-        <span class="doctrine-color">Doctrine</span> core team
-    </p>
-    <p class="fragment">
+        <span class="doctrine-color">octrine</span> team
+    </h2>
+</section>
+<section>
+    <h2>
         <img
             src="assets/img/zf-logo.svg"
             alt="Zend Framework 2"
-            width="60px"
-            style="margin: 0;"
+            width="150px"
+            style="margin: -8px;"
         />
-        <span class="zf-color">Zf2</span> contributor
-    </p>
-    <p class="fragment">
+        contributor
+    </h2>
+</section>
+<section>
+    <h2>
         <img
             src="assets/img/gh.svg"
             alt="Ocramius on Github"
-            height="40px"
+            height="70px"
             style="margin: 0;"
         />
-        <a href="http://github.com/Ocramius" target="_blank">Ocramius</a>
-    </p>
-    <p class="fragment">
         <img
             src="assets/img/twitter.svg"
             alt="Ocramius on Twitter"
-            height="30px"
+            height="70px"
             style="margin: 0;"
         />
         <a href="http://twitter.com/Ocramius" target="_blank">Ocramius</a>
-    </p>
+    </h2>
 </section>
 
 <section>
@@ -143,20 +96,54 @@
         </p>
     </section>
 </section>
-
 <section>
-    <h2>What is a <span class="proxy-color">Proxy</span>?</h2>
-    <p class="fragment">A proxy is a class functioning as an interface to something else</p>
-
-    <p class="fragment" style="font-size: small;">(carefully pasted from wikipedia)</p>
+    <h1>WHY?</h1>
+</section>
+<section>
+    <img src="assets/img/for-the-glory-of-satan.jpg" alt="For the glory of satan, of course!"/>
 </section>
 
 <section>
-    <h2>A <span class="proxy-color">Proxy</span> implements a <span class="php-color">Subject</span>'s interface</h2>
+    <h1>
+        The <span class="proxy-color">Proxy Pattern</span>
+        <br/>
+        in <span class="php-color" style="font-size: 120%;">PHP</span>
+    </h1>
+</section>
 
-    <p class="fragment">
-        We can use the <span class="proxy-color">proxy</span> in place of the
-        <span class="zf-color">subject</span> thanks to the
+<section>
+    <h2>What is a <span class="proxy-color">Proxy</span>?</h2>
+</section>
+<section>
+    <p>
+        A <span class="proxy-color">proxy</span>
+        is a class functioning as an interface to
+        <span class="php-color">something else</span>
+    </p>
+
+    <p class="fragment" style="font-size: small;">(carefully pasted from wikipedia)</p>
+</section>
+<section>
+    <h1>Simple put</h1>
+</section>
+<section>
+    <img src="assets/img/deer.png" alt="Deer"/>
+</section>
+<section>
+    <img src="assets/img/nope.png" alt="Nope"/>
+</section>
+<section>
+    <img src="assets/img/jack-testa.png" alt="Jack Testa!"/>
+</section>
+
+
+<section>
+    <h2>A <span class="proxy-color">Proxy</span> implements a <span class="php-color">Subject</span>'s interface</h2>
+</section>
+<section>
+    <p>
+        A <span class="proxy-color">proxy</span> replaces
+        <span class="php-color">subject</span> thanks to the
         <a href="http://en.wikipedia.org/wiki/Liskov_substitution_principle" target=_blank>
             <abbr title="Liskov Substitution Principle">LSP</abbr>
         </a>
@@ -169,28 +156,31 @@
         src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:green}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}].svg"
     />
 </section>
+<section>
+    <h2><span class="zf-color">Client</span> consumes <span class="php-color">SubjectInterface</span></h2>
+</section>
 
 <section data-state="soothe">
-    <h2><span class="zf-color">Client</span> consumes <span class="php-color">SubjectInterface</span></h2>
-
     <img
         alt="A Client uses the SubjectInterface"
         src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]<-.-consumes [Client{bg:green}].svg"
     />
 </section>
+<section>
+    <h2><span class="zf-color">Client</span> consumes <span class="php-color">RealSubject</span></h2>
+</section>
 
 <section data-state="soothe">
-    <h2><span class="zf-color">Client</span> consumes <span class="php-color">RealSubject</span></h2>
-
     <img
         alt="A Client uses the RealSubject"
         src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:green}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [RealSubject{bg:blue}]<-.-consumes [Client{bg:green}].svg"
     />
 </section>
+<section>
+    <h2><span class="zf-color">Client</span> consumes <span class="proxy-color">SubjectProxy</span></h2>
+</section>
 
 <section data-state="soothe">
-    <h2><span class="zf-color">Client</span> consumes <span class="proxy-color">SubjectProxy</span></h2>
-
     <img
         alt="A Client uses the SubjectProxy"
         src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:green}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [SubjectProxy{bg:orange}]<-.-consumes [Client{bg:green}].svg"
@@ -198,23 +188,31 @@
 </section>
 
 <section>
-    <h2>In <span class="php-color">PHP</span>, things can be simplified</h2>
+    <h2>In <span class="php-color">PHP</span>, we tend to simplify a bit</h2>
+</section>
 
-    <p class="fragment">
-        Since we don't always work with interfaces, we can have
+<section>
+    <h2>
         <span class="proxy-color">SubjectProxy</span> extending <span class="php-color">RealSubject</span>
-    </p>
-
-    <pre class="fragment"><code contenteditable>class SubjectProxy extends RealSubject { /* ... */ }</code></pre>
-
-    <p class="fragment">
+    </h2>
+</section>
+<section>
+    <pre><code contenteditable>class SubjectProxy extends RealSubject { /* ... */ }</code></pre>
+    <p>
         <img
             alt="ProxySubject extends the RealSubject"
             src="http://yuml.me/diagram/scruffy;dir:TB;/class/[RealSubject{bg:green}]^-extends [SubjectProxy{bg:orange}].svg"
         />
     </p>
 
-    <p class="fragment" style="font-size: small;">Though you should use interfaces!</p>
+    <p class="fragment" style="font-size: small;">Though you <strong>should</strong> use interfaces!</p>
+</section>
+
+<section>
+    <img
+        alt="So what? I have a tie"
+        src="assets/img/so-what-i-have-a-tie.jpg"
+    />
 </section>
 
 <section>
@@ -222,27 +220,40 @@
 </section>
 
 <section>
-    <h2>From the <abbr title="Gang of Four">GoF</abbr>:</h2>
-    <p class="fragment">
+    <h1>From the <abbr title="Gang of Four">GoF</abbr></h1>
+</section>
+
+<section>
+    <h2>
         <span class="proxy-color">Remote proxy</span>
-        <br/>
-        Provides a local representative for an object in a different address space
-    </p>
-    <p class="fragment">
+    </h2>
+    <p class="fragment">Provides a local representative for an object in a different address space</p>
+</section>
+
+<section>
+    <h2>
         <span class="proxy-color">Virtual proxy</span>
-        <br/>
-        Lazily instantiates expensive objects
-    </p>
-    <p class="fragment">
+    </h2>
+    <p class="fragment">Lazily instantiates expensive objects</p>
+</section>
+
+<section>
+    <h2>
         <span class="proxy-color">Protection proxy</span>
-        <br/>
-        Limits access to the real subject
-    </p>
-    <p class="fragment">
+    </h2>
+    <p class="fragment">Limits access to the real subject</p>
+</section>
+
+<section>
+    <h2>
         <span class="proxy-color">Smart reference</span>
-        <br/>
-        Performs additional actions when the subject is accessed
-    </p>
+    </h2>
+    <p class="fragment">Performs additional actions when the subject is accessed</p>
+</section>
+
+<section>
+    <h2>I'm a software architect</h2>
+    <img class="fragment" src="assets/img/i-have-no-idea-what-i-m-doing.jpg" alt="I have no idea what I'm doing" />
 </section>
 
 <section>
