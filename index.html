@@ -227,28 +227,28 @@
     <h2>
         <span class="proxy-color">Remote proxy</span>
     </h2>
-    <p class="fragment">Provides a local representative for an object in a different address space</p>
+    <!--<p class="fragment">Provides a local representative for an object in a different address space</p>-->
 </section>
 
 <section>
     <h2>
         <span class="proxy-color">Virtual proxy</span>
     </h2>
-    <p class="fragment">Lazily instantiates expensive objects</p>
+    <!--<p class="fragment">Lazily instantiates expensive objects</p>-->
 </section>
 
 <section>
     <h2>
         <span class="proxy-color">Protection proxy</span>
     </h2>
-    <p class="fragment">Limits access to the real subject</p>
+    <!--<p class="fragment">Limits access to the real subject</p>-->
 </section>
 
 <section>
     <h2>
         <span class="proxy-color">Smart reference</span>
     </h2>
-    <p class="fragment">Performs additional actions when the subject is accessed</p>
+    <!--<p class="fragment">Performs additional actions when the subject is accessed</p>-->
 </section>
 
 <section>
@@ -258,20 +258,34 @@
 
 <section>
     <h2><span class="proxy-color">Remote Proxy</span></h2>
+</section>
+
+<section data-state="soothe">
     <img
-        class="fragment"
+        alt="Remote Object Proxy UML"
+        src="http://yuml.me/diagram/plain;dir:LR;/class/[RealSubject{bg:green}]intertubes-intertubes[SubjectProxy{bg:orange}].svg"
+    />
+</section>
+
+<section data-state="soothe">
+    <img
         alt="Remote Object Proxy UML"
         src="http://yuml.me/diagram/plain;dir:LR;/class/[RealSubject{bg:green}]<-.- uses[AdapterServer{bg:blue}],[AdapterServer{bg:blue}]intertubes-intertubes[AdapterClient{bg:blue}],[AdapterClient{bg:blue}]<-.- uses[SubjectProxy{bg:orange}].svg"
     />
+    <!--
     <p class="fragment">
         Every call to the <span class="proxy-color">SubjectProxy</span> would go directly
         through the across the <span class="php-color">AdapterClient</span>
         to the <span class="zf-color">RealSubject</span>
     </p>
+    -->
 </section>
 
 <section>
-    <h2><span class="proxy-color">Remote Object</span> example (1/3)</h2>
+    <h2><span class="proxy-color">Remote Object</span> example</h2>
+</section>
+
+<section>
     <pre><code contenteditable>class Tweet {
     protected $data;
 
@@ -286,7 +300,6 @@
 </section>
 
 <section>
-    <h2><span class="proxy-color">remote object</span> example (2/3)</h2>
     <pre><code contenteditable>class TweetProxy extends Tweet {
     protected $api;
     protected $id;
@@ -303,8 +316,7 @@
 </section>
 
 <section>
-    <h2><span class="proxy-color">remote object</span> example (3/3)</h2>
-<pre><code contenteditable>$tweet = new Tweet(array('text' => 'Proxies in PHP!'));
+    <pre><code contenteditable>$tweet = new Tweet(array('text' => 'Proxies in PHP!'));
 var_dump($tweet->getText()); // 'Proxies in PHP!'
 
 $api = new TwitterApi(/* yadda */); // buzz, guzzle, zf
@@ -328,20 +340,23 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
 <section>
     <h2><span class="php-color">Lazy Loading</span></h2>
 
-    <p class="fragment">
-        Lazy loading comes into play when we have to retrieve very expensive objects, like:
-    </p>
-    <ul>
-        <li class="fragment">DB Connections</li>
-        <li class="fragment">File Contents (and I/O in general)</li>
-        <li class="fragment">Large objects (memory)</li>
-        <li class="fragment">Objects with long instantiation time (hashes/parsed values/etc)</li>
+    <img src="assets/img/lazy-loading.png" alt="Lazy Loading"/>
+</section>
+
+<section>
+    <p>For <strong>very expensive</strong> objects:</p>
+    <ul class="fragment">
+        <li>DB Connections</li>
+        <li>File Contents (and I/O in general)</li>
+        <li>Large objects (memory)</li>
+        <li>Objects with long instantiation time (hashes/parsed values/etc)</li>
     </ul>
 </section>
 <section>
     <h2><span class="php-color">Lazy Loading</span> example</h2>
-
-    <pre class="fragment"><code contenteditable>class Customer {
+</section>
+<section>
+    <pre><code contenteditable>class Customer {
     public function __construct(DbConnection $db, $id) {
         $this->db = $db;
         $this->id = $id;
@@ -395,7 +410,6 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Virtual Proxy</span> example (1/3)</h2>
     <pre><code contenteditable>class Image {
     protected $image;
     public function __construct($path) {
@@ -412,8 +426,7 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Virtual Proxy</span> example (2/3)</h2>
-<pre><code contenteditable>class ImageVirtualProxy extends Image {
+    <pre><code contenteditable>class ImageVirtualProxy extends Image {
     protected $wrapped;
     public function __construct($path) {
         $this->path = $path;
@@ -433,8 +446,7 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Value Holder</span> example (3/3)</h2>
-<pre><code contenteditable>$img1 = new ImageProxy('/path/to/image1.jpg');
+    <pre><code contenteditable>$img1 = new ImageProxy('/path/to/image1.jpg');
 var_dump(memory_get_usage()); // ~200Kb
 $img2 = new ImageProxy('/path/to/image2.jpg');
 var_dump(memory_get_usage()); // ~200Kb
@@ -474,8 +486,10 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Ghost Object</span> example (simplified)</h2>
-<pre><code contenteditable>class ImageGhostProxy extends Image {
+    <h2><span class="proxy-color">Ghost Object</span> (simplified) example</h2>
+</section>
+<section>
+    <pre><code contenteditable>class ImageGhostProxy extends Image {
     protected $initialized = false;
     public function __construct($path) {
         $this->path = $path;
@@ -506,6 +520,7 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
     <p class="fragment cons-line">Lazy loading means lazy failing</p>
 </section>
 
+<!--
 <section>
     <h2>A complete <span class="proxy-color">Ghost Object</span> implementation</h2>
     <p>
@@ -513,13 +528,13 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
         <a href="https://gist.github.com/4038004" target="_blank">https://gist.github.com/4038004</a>
     </p>
 </section>
-
+-->
 <!-- @todo re-introduce example with weakref? -->
 <!-- @todo re-introduce example with null object? -->
 
 <section>
     <h2><span class="proxy-color">Protection proxy</span></h2>
-    <p>
+    <p class="fragment">
         A <span class="proxy-color">Protection Proxy</span> comes into play when you want to transparently
         limit access to an API through a set of rules (ACL/limits/custom logic).
     </p>
@@ -527,7 +542,6 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Protection proxy</span> (1/2)</h2>
     <pre><code contenteditable>class APIProtectionProxy extends API {
     protected $count = 0;
     public function __construct(API $api, $limit) {
@@ -548,7 +562,6 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Protection proxy</span> (2/2)</h2>
     <pre><code contenteditable>$api = new APIProtectionProxy(new API(/* ... */), 50);
 
 while (true) {
@@ -586,6 +599,9 @@ while (true) {
 <section>
     <h2><span class="proxy-color">Smart reference</span> example</h2>
     <p class="fragment">Let's cache a complex/slow method call</p>
+</section>
+
+<section>
     <pre class="fragment"><code contenteditable>    /**
      * @AOP\Cache(ttl=3600)
      */
