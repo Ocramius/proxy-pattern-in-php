@@ -173,7 +173,7 @@
 <section data-state="soothe">
     <img
         alt="A Client uses the RealSubject"
-        src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:green}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [RealSubject{bg:blue}]<-.-consumes [Client{bg:green}].svg"
+        src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:green}], [RealSubject{bg:blue}]<-.-consumes [Client{bg:green}].svg"
     />
 </section>
 <section>
@@ -183,19 +183,17 @@
 <section data-state="soothe">
     <img
         alt="A Client uses the SubjectProxy"
-        src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:green}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [SubjectProxy{bg:orange}]<-.-consumes [Client{bg:green}].svg"
+        src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [SubjectProxy{bg:orange}]<-.-consumes [Client{bg:green}].svg"
     />
 </section>
 
 <section>
-    <h2>In <span class="php-color">PHP</span>, we tend to simplify a bit</h2>
+    <h2>Simplified:</h2>
+    <p>
+        <span class="proxy-color">SubjectProxy</span> extending <span class="php-color">RealSubject</span>
+    </p>
 </section>
 
-<section>
-    <h2>
-        <span class="proxy-color">SubjectProxy</span> extending <span class="php-color">RealSubject</span>
-    </h2>
-</section>
 <section>
     <pre><code contenteditable>class SubjectProxy extends RealSubject { /* ... */ }</code></pre>
     <p>
@@ -227,28 +225,15 @@
     <h2>
         <span class="proxy-color">Remote proxy</span>
     </h2>
-    <!--<p class="fragment">Provides a local representative for an object in a different address space</p>-->
-</section>
-
-<section>
-    <h2>
+    <h2 class="fragment">
         <span class="proxy-color">Virtual proxy</span>
     </h2>
-    <!--<p class="fragment">Lazily instantiates expensive objects</p>-->
-</section>
-
-<section>
-    <h2>
+    <h2 class="fragment">
         <span class="proxy-color">Protection proxy</span>
     </h2>
-    <!--<p class="fragment">Limits access to the real subject</p>-->
-</section>
-
-<section>
-    <h2>
+    <h2 class="fragment">
         <span class="proxy-color">Smart reference</span>
     </h2>
-    <!--<p class="fragment">Performs additional actions when the subject is accessed</p>-->
 </section>
 
 <section>
@@ -272,13 +257,6 @@
         alt="Remote Object Proxy UML"
         src="http://yuml.me/diagram/plain;dir:LR;/class/[RealSubject{bg:green}]<-.- uses[AdapterServer{bg:blue}],[AdapterServer{bg:blue}]intertubes-intertubes[AdapterClient{bg:blue}],[AdapterClient{bg:blue}]<-.- uses[SubjectProxy{bg:orange}].svg"
     />
-    <!--
-    <p class="fragment">
-        Every call to the <span class="proxy-color">SubjectProxy</span> would go directly
-        through the across the <span class="php-color">AdapterClient</span>
-        to the <span class="zf-color">RealSubject</span>
-    </p>
-    -->
 </section>
 
 <section>
@@ -317,14 +295,15 @@
 
 <section>
     <pre><code contenteditable>$tweet = new Tweet(array('text' => 'Proxies in PHP!'));
-var_dump($tweet->getText()); // 'Proxies in PHP!'
+var_dump($tweet->getText()); // Proxies in PHP!
 
-$api = new TwitterApi(/* yadda */); // buzz, guzzle, zf
+$api = new TwitterApi(/* yadda */);
+
 $remoteTweet = new TweetProxy($api, 280643708968386560);
-var_dump($remoteTweet->getText()); // 'Tweet text!'
+var_dump($remoteTweet->getText()); // Tweet text!
 
 $remoteTweet = new TweetProxy($api, 280643708968386561);
-var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
+var_dump($remoteTweet->getText()); // Another text!</code></pre>
 </section>
 
 <section>
@@ -347,10 +326,11 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
     <p>For <strong>very expensive</strong> objects:</p>
     <ul class="fragment">
         <li>DB Connections</li>
-        <li>File Contents (and I/O in general)</li>
+        <li>Files (I/O in general)</li>
         <li>Large objects (memory)</li>
         <li>Objects with long instantiation time (hashes/parsed values/etc)</li>
     </ul>
+    <p class="fragment">(A pattern, not a proxy type)</p>
 </section>
 <section>
     <h2><span class="php-color">Lazy Loading</span> example</h2>
@@ -397,12 +377,14 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
         An object that looks like the <span class="php-color">RealSubject</span>, but with all properties not being
         set and being lazy loaded.
     </p>
+    <!--
     <p class="fragment">
         (not a proxy) <span class="php-color">Value holder</span>
         <br/>
         An abstraction of <span class="php-color">Lazy Loading</span>. It usually is an object that returns the
         lazy-loaded instance on demand.
     </p>
+    -->
 </section>
 
 <section>
@@ -419,7 +401,7 @@ var_dump($remoteTweet->getText()); // 'Another text!'</code></pre>
     public function getSize() {
         return array(
             imagesx($this->image),
-            imagesy($this->image)
+            imagesy($this->image),
         );
     }
 }</code></pre>
@@ -460,7 +442,7 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Value Holder</span> pros/cons</h2>
+    <h2><span class="proxy-color">Virtual Proxy</span> pros/cons</h2>
     <p class="fragment pros-line">Abstracts initialization logic away</p>
     <p class="fragment pros-line">Improved memory/performance impact</p>
     <p class="fragment pros-line">Low overhead</p>
@@ -520,15 +502,6 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
     <p class="fragment cons-line">Lazy loading means lazy failing</p>
 </section>
 
-<!--
-<section>
-    <h2>A complete <span class="proxy-color">Ghost Object</span> implementation</h2>
-    <p>
-        A complete implementation example at
-        <a href="https://gist.github.com/4038004" target="_blank">https://gist.github.com/4038004</a>
-    </p>
-</section>
--->
 <!-- @todo re-introduce example with weakref? -->
 <!-- @todo re-introduce example with null object? -->
 
@@ -629,64 +602,165 @@ while (true) {
 </section>
 
 <section>
-    <h2>Implementation details in <span class="php-color">PHP</span></h2>
-    <p class="fragment">What do we need to build a <span class="proxy-color">proxy</span>?</p>
+    <h2>Implementing a <span>Proxy</span> in <span class="php-color">PHP</span></h2>
+</section>
+
+<section>
+    <h2>Poor coder's <span class="proxy-color">proxy</span> implementation:</h2>
+    <pre class="fragment"><code contenteditable>class MyProxy {
+    // ...
+
+    public function __call($method, $args) {
+        return call_user_func_array(
+            $this->someWrappedStuff,
+            $args
+        );
+    }
+}</code></pre>
+</section>
+
+<section>
+    <img src="assets/img/nooooo-darth-vader.jpg" alt="don't do it!"/>
 </section>
 
 <section>
     <h2>Implementing a (generic) <span class="proxy-color">Proxy</span></h2>
     <ol>
-        <li class="fragment">The Proxy class MUST extend the proxied class</li>
-        <li class="fragment">Each of the proxied methods SHOULD be rewritten</li>
-        <li class="fragment">Access to public properties SHOULD be intercepted</li>
+        <li><span class="php-color">MUST</span> respect the LSP!</li>
+        <li>Not so trivial!</li>
     </ol>
 </section>
 
 <section>
-    <h2><span class="php-color">Public properties</span> <span class="proxy-color">proxying</span></h2>
-    <pre class="fragment"><code contenteditable>class Customer {
-    public $name;
-    public $surname;
-}</code></pre>
+    <h2><span class="proxy-color">Proxies</span> are NOT nice:</h2>
+    <pre><code contenteditable>&lt;?php
+namespace Proxy\__PM__;
 
-<pre class="fragment"><code contenteditable>class CustomerProxy extends Customer {
-    public function __construct(Customer $customer) {
-        unset($this->name, $this->surname);
-        $this->customer = $customer;
+class A extends \A
+{
+    private $valueHolder;
+    private $initializer;
+
+    public function getFoo()
+    {
+        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, 'getFoo', array(), $this->initializer);
+
+        return $this->valueHolder->getFoo();
     }
 
-    public function __set($name, $value) {
-        $this->customer->$name = $value;
+    public function __construct($initializer)
+    {
+        unset($this->foo);
+
+        $this->initializer = $initializer;
     }
 
-    public function __get($name) {
-        return $this->customer->$name;
+    public function __get($name)
+    {
+        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__get', array('name' => $name), $this->initializer);
+
+        return $this->valueHolder->$name;
     }
-    // __isset, __unset, __clone, __sleep, __wakeup (or serialize/unserialize)
+
+    public function __set($name, $value)
+    {
+        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__set', array('name' => $name, 'value' => $value), $this->initializer);
+
+        $this->valueHolder->$name = $value;
+    }
+
+    public function __isset($name)
+    {
+        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__isset', array('name' => $name), $this->initializer);
+
+        return isset($this->valueHolder->$name);
+    }
+
+    public function __unset($name)
+    {
+        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__unset', array('name' => $name), $this->initializer);
+
+        unset($this->valueHolder->$name);
+    }
+
+    public function __clone()
+    {
+        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__clone', array(), $this->initializer);
+
+        $this->valueHolder = clone $this->valueHolder;
+    }
+
+    public function __sleep()
+    {
+        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__sleep', array(), $this->initializer);
+
+        return array('valueHolder');
+    }
+
+    public function __wakeup()
+    {
+        unset($this->foo);
+    }
+
+    public function setProxyInitializer(\Closure $initializer = null)
+    {
+        $this->initializer = $initializer;
+    }
+
+    public function getProxyInitializer()
+    {
+        return $this->initializer;
+    }
+
+    public function initializeProxy()
+    {
+        return $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, 'initializeProxy', array(), $this->initializer);
+    }
+
+    public function isProxyInitialized()
+    {
+        return null !== $this->valueHolder;
+    }
+
+    public function getWrappedValueHolderValue()
+        {
+        return $this->valueHolder;
+    }
 }</code></pre>
 </section>
 
 <section>
     <h2>Introducing <span class="proxy-color">ProxyManager</span></h2>
-    <p class="fragment">
+    <p>
         <img
             src="assets/img/gh.svg"
-            alt="Ocramius on Github"
+            alt="ProxyManager on Github"
             height="40px"
             style="margin: 0;"
         />
         <a href="https://github.com/Ocramius/ProxyManager" target="_blank">https://github.com/Ocramius/ProxyManager</a>
     </p>
-    <p class="fragment">A library to avoid bringing out the generated garbage yourself</p>
-    <p class="fragment">Handles various types of <span class="proxy-color">proxy</span></p>
-    <p class="fragment">
-        Currently <span class="proxy-color">Virtual Proxy</span> and <span class="proxy-color">Smart Reference</span>
+</section>
+
+<section>
+    <p>Avoid bringing out the generated garbage yourself!</p>
+    <p>
+        (Currently) deals with
+        <span class="proxy-color">Virtual Proxy</span>,
+        <span class="proxy-color">Smart Reference</span> and
+        <span class="proxy-color">Ghost Objects</span>
     </p>
 </section>
 
 <section>
-    <h2><span class="php-color">Lazy loading</span> with the <span class="proxy-color">ProxyManager</span></h2>
-    <pre class="fragment"><code contenteditable>namespace My\Slow;
+    <p>Integrated in <span class="php-color">Symfony2</span> and <span class="zf-color">Zend Framework 2</span></p>
+</section>
+
+<section>
+    <h2><span class="php-color">Virtual Proxy</span> with <span class="proxy-color">ProxyManager</span></h2>
+</section>
+<section>
+    <pre><code contenteditable>namespace My\Slow;
 
 class Foo
 {
@@ -704,8 +778,7 @@ class Foo
 </section>
 
 <section>
-    <h2><span class="php-color">Lazy loading</span> with the <span class="proxy-color">ProxyManager</span></h2>
-    <pre class="fragment"><code contenteditable>require_once 'vendor/autoload.php';
+    <pre><code contenteditable>require_once 'vendor/autoload.php';
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 
 $c = new ProxyManager\Configuration();
@@ -716,7 +789,6 @@ $proxy = $f->createProxy(
     function (& $wrappedObject, $proxy) {
         $wrappedObject = new My\Slow\Foo();
         $proxy->setProxyInitializer(null);
-        return true;
     }
 );
 
@@ -724,12 +796,14 @@ $proxy->doFoo();</code></pre>
 </section>
 
 <section>
-    <h2><span class="php-color">Smart Reference</span> with the <span class="proxy-color">ProxyManager</span></h2>
-    <pre class="fragment"><code contenteditable>require_once 'vendor/autoload.php';
+    <h2><span class="php-color">Smart Reference</span> with <span class="proxy-color">ProxyManager</span></h2>
+</section>
+<section>
+    <pre><code contenteditable>require_once 'vendor/autoload.php';
 use ProxyManager\Factory\AccessInterceptorValueHolderFactory;
 
-$c = new ProxyManager\Configuration();
-$f = new AccessInterceptorValueHolderFactory($config);
+$c  = new ProxyManager\Configuration();
+$f  = new AccessInterceptorValueHolderFactory($config);
 $db = $factory->createProxy(
     new \My\Db\Connection(),
     array('query' => function () {
@@ -741,53 +815,56 @@ $db = $factory->createProxy(
 );
 
 $db->query();</code></pre>
-    <p class="fragment">Yes, I'm no good at naming classes</p>
+    <p class="fragment">Yes, I'm no good at naming classes - really.</p>
 </section>
 
-<!-- @todo add initializer example? -->
+<section>
+    <h2><span class="proxy-color">Virtual Proxies</span> with <span class="zf-color">Zend Framework 2</span></h2>
+    <pre><code contenteditable>return [
+    'service_manager' =&gt; [
+        'delegators' =&gt; [
+            'MyServiceName' =&gt; ['LazyServiceFactory']
+        ],
+    ],
+    'lazy_services' =&gt; [
+        'map' =&gt; ['MyServiceName' =&gt; 'My\Service\ClassName']
+    ]
+]</code></pre>
+</section>
 
 <section>
-    <h2>Code generation</h2>
-    <p>
-        See
+        <h2><span class="proxy-color">Virtual Proxies</span> with <span class="php-color">Symfony 2</span></h2>
+<pre><code contenteditable>&lt;services&gt;
+    &lt;service
+        id="MyServiceName"
+        class="My\Service\ClassName"
+        lazy="true"
+    /&gt;
+&lt;/services&gt;</code></pre>
+</section>
+
+<section>
+    <h2>What about <span class="php-color">REACT PHP</span>?</h2>
+    <p class="fragment">Sorry :(</p>
+</section>
+
+<section>
+    <h2>Some useful libraries</h2>
+    <p class="fragment">
         <a href="https://github.com/doctrine/common/blob/master/lib/Doctrine/Common/Proxy/ProxyGenerator.php">
             Doctrine's Proxy Generator
         </a>
-        and
+    </p>
+    <p class="fragment">
         <a href="https://github.com/ocramius/ProxyManager">ProxyManager</a>
     </p>
-</section>
-
-<section>
-    <h2>Some useful <span class="php-color">libraries</span></h2>
-</section>
-
-<section>
-    <h2>Flow3</h2>
-    <p><a href="http://flow.typo3.org/" target="_blank">http://flow.typo3.org</a></p>
+    <p class="fragment"><a href="http://flow.typo3.org/" target="_blank">Flow (Typo3)</a></p>
     <p class="fragment">
-        First implementation of <span class="php-color">annotations</span> in PHP
-        <span style="font-size: small;">(<abbr title="as far as I know">afaik</abbr>)</span>
-    </p>
-    <p class="fragment">
-        Usage of <span class="proxy-color">proxies</span> in the <abbr title="Dependency Injection Container">DIC</abbr>
-    </p>
-</section>
-<section>
-    <h2>CG-Library</h2>
-    <p>
-        <img
-            src="assets/img/gh.svg"
-            alt="Ocramius on Github"
-            height="40px"
-            style="margin: 0;"
-        />
         <a href="https://github.com/schmittjoh/cg-library/" target="_blank">schmittjoh/cg-library</a>
     </p>
-    <p class="fragment">Utilities if you want to write your own <span class="proxy-color">proxy generator</span></p>
 </section>
 <section>
-    <h2>GO AOP PHP</h2>
+    <h2><span class="proxy-color">Proxies</span> and <span class="php-color">AOP</span></h2>
     <p>
         <img
             src="assets/img/gh.svg"
@@ -797,10 +874,10 @@ $db->query();</code></pre>
         />
         <a href="https://github.com/lisachenko/go-aop-php/" target="_blank">lisachenko/go-aop-php</a>
     </p>
-    <p class="fragment">
+    <p>
         Uses <span class="proxy-color">proxies</span> for <span class="php-color">AOP</span> purposes
     </p>
-    <p class="fragment">
+    <p>
         Very interesting usage of <span class="php-color">autoloaders</span>!
     </p>
 </section>
@@ -811,6 +888,7 @@ $db->query();</code></pre>
 
 <section>
     <h2>Thank you!</h2>
+    <p>Slides at <a href="https://joind.in/8451" target="_blank">https://joind.in/8451</a></p>
     <p>
         Fork the slides!
         <br/>
@@ -826,6 +904,12 @@ $db->query();</code></pre>
     </p>
     <p>
         <img
+            src="assets/img/twitter.svg"
+            alt="Ocramius on Twitter"
+            height="30px"
+            style="margin: 0;"
+        />
+        <img
             src="assets/img/gh.svg"
             alt="Ocramius on Github"
             height="40px"
@@ -833,16 +917,33 @@ $db->query();</code></pre>
         />
         <a href="http://github.com/Ocramius" target="_blank">Ocramius</a>
     </p>
-    <p>
-        <img
-            src="assets/img/twitter.svg"
-            alt="Ocramius on Twitter"
-            height="30px"
-            style="margin: 0;"
-        />
-        <a href="http://twitter.com/Ocramius" target="_blank">Ocramius</a>
-    </p>
 </section>
+
+
+<section>
+    <h2><span class="php-color">Public properties</span> <span class="proxy-color">proxying</span></h2>
+    <pre class="fragment"><code contenteditable>class Customer {
+    public $name;
+    public $surname;
+}</code></pre>
+
+    <pre class="fragment"><code contenteditable>class CustomerProxy extends Customer {
+    public function __construct(Customer $customer) {
+        unset($this->name, $this->surname);
+        $this->customer = $customer;
+    }
+
+    public function __set($name, $value) {
+        $this->customer->$name = $value;
+    }
+
+    public function __get($name) {
+        return $this->customer->$name;
+    }
+    // __isset, __unset, __clone, __sleep, __wakeup (or serialize/unserialize)
+}</code></pre>
+</section>
+
 
 </div>
 </div>
