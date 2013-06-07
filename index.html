@@ -819,7 +819,7 @@ $db->query();</code></pre>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Virtual Proxies</span> with <span class="zf-color">Zend Framework 2</span></h2>
+    <h2><span class="proxy-color">Virtual Proxies</span> + <span class="zf-color">Zend Framework 2</span></h2>
     <pre><code contenteditable>return [
     'service_manager' =&gt; [
         'delegators' =&gt; [
@@ -833,7 +833,7 @@ $db->query();</code></pre>
 </section>
 
 <section>
-        <h2><span class="proxy-color">Virtual Proxies</span> with <span class="php-color">Symfony 2</span></h2>
+        <h2><span class="proxy-color">Virtual Proxies</span> + <span class="php-color">Symfony 2</span></h2>
 <pre><code contenteditable>&lt;services&gt;
     &lt;service
         id="MyServiceName"
@@ -931,9 +931,9 @@ $db->query();</code></pre>
     public function __construct(Customer $customer) {
         unset($this->name, $this->surname);
         $this->customer = $customer;
-    }
-
-    public function __set($name, $value) {
+    }</code></pre>
+	
+    <pre class="fragment"><code contenteditable>    public function __set($name, $value) {
         $this->customer->$name = $value;
     }
 
