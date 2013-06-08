@@ -347,7 +347,7 @@ var_dump($remoteTweet->getText()); // Another text!</code></pre>
         return $this->data['name'];
     }
 
-    public function init() {
+    private function init() {
         if (!isset($this->data)) {
             $this->data = $this->db->load($this->id);
         }
