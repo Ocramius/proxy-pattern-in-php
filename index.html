@@ -153,7 +153,7 @@
 <section data-state="soothe">
     <img
         alt="A Proxy implements the same interface as of a real subject"
-        src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:green}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}].svg"
+        src="http://yuml.me/diagram/dir:TB;scale:180;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:blue}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}].svg"
     />
 </section>
 <section>
@@ -163,7 +163,7 @@
 <section data-state="soothe">
     <img
         alt="A Client uses the SubjectInterface"
-        src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]<-.-consumes [Client{bg:green}].svg"
+        src="http://yuml.me/diagram/dir:TB;scale:180;/class/[<<SubjectInterface>>]<-.-consumes [Client{bg:green}].svg"
     />
 </section>
 <section>
@@ -173,7 +173,7 @@
 <section data-state="soothe">
     <img
         alt="A Client uses the RealSubject"
-        src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:green}], [RealSubject{bg:blue}]<-.-consumes [Client{bg:green}].svg"
+        src="http://yuml.me/diagram/dir:TB;scale:120;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:blue}], [RealSubject{bg:blue}]<-.-consumes [Client{bg:green}].svg"
     />
 </section>
 <section>
@@ -183,7 +183,7 @@
 <section data-state="soothe">
     <img
         alt="A Client uses the SubjectProxy"
-        src="http://yuml.me/diagram/scruffy;dir:TB;/class/[<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [SubjectProxy{bg:orange}]<-.-consumes [Client{bg:green}].svg"
+        src="http://yuml.me/diagram/dir:TB;scale:120;/class/[<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [SubjectProxy{bg:orange}]<-.-consumes [Client{bg:green}].svg"
     />
 </section>
 
@@ -199,7 +199,7 @@
     <p>
         <img
             alt="ProxySubject extends the RealSubject"
-            src="http://yuml.me/diagram/scruffy;dir:TB;/class/[RealSubject{bg:green}]^-extends [SubjectProxy{bg:orange}].svg"
+            src="http://yuml.me/diagram/dir:TB;scale:160;/class/[RealSubject{bg:blue}]^-extends [SubjectProxy{bg:orange}].svg"
         />
     </p>
 
@@ -248,14 +248,14 @@
 <section data-state="soothe">
     <img
         alt="Remote Object Proxy UML"
-        src="http://yuml.me/diagram/plain;dir:LR;/class/[RealSubject{bg:green}]intertubes-intertubes[SubjectProxy{bg:orange}].svg"
+        src="http://yuml.me/diagram/plain;dir:LR;scale:140;/class/[RealSubject{bg:blue}]intertubes-intertubes[SubjectProxy{bg:orange}].svg"
     />
 </section>
 
 <section data-state="soothe">
     <img
         alt="Remote Object Proxy UML"
-        src="http://yuml.me/diagram/plain;dir:LR;/class/[RealSubject{bg:green}]<-.- uses[AdapterServer{bg:blue}],[AdapterServer{bg:blue}]intertubes-intertubes[AdapterClient{bg:blue}],[AdapterClient{bg:blue}]<-.- uses[SubjectProxy{bg:orange}].svg"
+        src="http://yuml.me/diagram/plain;dir:LR;scale:180;/class/[RealSubject{bg:blue}]<-.- uses[AdapterServer{bg:green}],[AdapterServer{bg:green}]intertubes-intertubes[AdapterClient{bg:green}],[AdapterClient{bg:green}]<-.- uses[SubjectProxy{bg:orange}].svg"
     />
 </section>
 
@@ -782,10 +782,10 @@ class Foo
     <pre><code contenteditable>require_once 'vendor/autoload.php';
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 
-$c = new ProxyManager\Configuration();
-$f = new LazyLoadingValueHolderFactory($c);
+$config  = new ProxyManager\Configuration();
+$factory = new LazyLoadingValueHolderFactory($config);
 
-$proxy = $f->createProxy(
+$proxy = $factory->createProxy(
     'My\Slow\Foo',
     function (& $wrappedObject, $proxy) {
         $wrappedObject = new My\Slow\Foo();
@@ -803,8 +803,8 @@ $proxy->doFoo();</code></pre>
     <pre><code contenteditable>require_once 'vendor/autoload.php';
 use ProxyManager\Factory\AccessInterceptorValueHolderFactory;
 
-$c  = new ProxyManager\Configuration();
-$f  = new AccessInterceptorValueHolderFactory($config);
+$config  = new ProxyManager\Configuration();
+$factory = new AccessInterceptorValueHolderFactory($config);
 $db = $factory->createProxy(
     new \My\Db\Connection(),
     array('query' => function () {
@@ -842,11 +842,6 @@ $db->query();</code></pre>
         lazy="true"
     /&gt;
 &lt;/services&gt;</code></pre>
-</section>
-
-<section>
-    <h2>What about <span class="php-color">REACT PHP</span>?</h2>
-    <p class="fragment">Sorry :(</p>
 </section>
 
 <section>
@@ -889,7 +884,12 @@ $db->query();</code></pre>
 
 <section>
     <h2>Thank you!</h2>
-    <p>Slides at <a href="https://joind.in/8451" target="_blank">https://joind.in/8451</a></p>
+    <p>
+	    Slides at 
+	    <a href="http://marco-pivetta.com/proxy-pattern-in-php/" target="_blank">
+		    marco-pivetta.com/proxy-pattern-in-php/
+	    </a>
+	</p>
     <p>
         Fork the slides!
         <br/>
@@ -961,8 +961,8 @@ $db->query();</code></pre>
         history: true,
         center: true,
 
-        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-        transition: Reveal.getQueryHash().transition || 'page', // default/cube/page/concave/zoom/linear/none
+        theme: Reveal.getQueryHash().theme || 'sky', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/none
 
         // Optional libraries used to extend on reveal.js
         dependencies: [
