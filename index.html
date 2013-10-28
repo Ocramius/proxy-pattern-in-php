@@ -694,7 +694,7 @@ while (true) {
 </section>
 
 <section>
-    <pre class="fragment"><code contenteditable>    /** @AOP\Cache(ttl=3600) */
+    <pre><code contenteditable>    /** @AOP\Cache(ttl=3600) */
     public function doHeavyStuff() {
         // [...]
     }</code></pre>
@@ -912,18 +912,6 @@ class A extends \A
 </section>
 
 <section>
-    <h2>
-        Integrates with
-        <br/>
-        <span class="php-color">Symfony2</span>
-        <br/>
-        and
-        <br/>
-        <span class="zf-color">Zend Framework 2</span>
-    </h2>
-</section>
-
-<section>
     <h2><span class="php-color">Virtual Proxy</span> with <span class="proxy-color">ProxyManager</span></h2>
 </section>
 <section>
@@ -985,7 +973,19 @@ $db-&gt;query();</code></pre>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Virtual Proxies</span> + <span class="zf-color">Zend Framework 2</span></h2>
+    <h2>
+        Integrates with
+        <br/>
+        <span class="php-color">Symfony2</span>
+        <br/>
+        and
+        <br/>
+        <span class="zf-color">Zend Framework 2</span>
+    </h2>
+</section>
+
+<section>
+    <h2><span class="proxy-color">Virtual (Service) Proxies</span> + <span class="zf-color">Zend Framework 2</span></h2>
     <pre><code contenteditable>return [
     'service_manager' =&gt; [
         'delegators' =&gt; [
@@ -999,7 +999,7 @@ $db-&gt;query();</code></pre>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Virtual Proxies</span> + <span class="php-color">Symfony 2</span></h2>
+    <h2><span class="proxy-color">Virtual (Service) Proxies</span> + <span class="php-color">Symfony 2</span></h2>
 <pre><code contenteditable>&lt;services&gt;
     &lt;service
         id="MyServiceName"
@@ -1044,29 +1044,21 @@ $db-&gt;query();</code></pre>
 </section>
 
 <section>
-    <h2>Questions?</h2>
+    <p>And before we get to the dirty stuff...</p>
 </section>
 
 <section>
-    <h2>Thank you!</h2>
+    <h2>Questions?</h2>
     <p>
-	    Slides at 
-	    <a href="http://marco-pivetta.com/proxy-pattern-in-php/" target="_blank">
-		    marco-pivetta.com/proxy-pattern-in-php/
-	    </a>
-	</p>
-    <p>
-        Fork the slides!
-        <br/>
-        <img
-            src="assets/img/gh.svg"
-            alt="Ocramius on Github"
-            height="40px"
-            style="margin: 0;"
-        />
-        <a href="https://github.com/Ocramius/proxy-pattern-in-php" target="_blank">
-            Ocramius/proxy-pattern-in-php
+        <a href="https://github.com/Ocramius">
+            <img
+                src="assets/img/gh.svg"
+                alt="Ocramius on Github"
+                height="40px"
+                style="margin: 0;"
+            />
         </a>
+        <a href="https://github.com/Ocramius/proxy-pattern-in-php" target="_blank">Ocramius/proxy-pattern-in-php</a>
     </p>
     <p>
         <img
@@ -1086,7 +1078,7 @@ $db-&gt;query();</code></pre>
 </section>
 
 <section>
-    <h2><span class="php-color">Fluent interfaces</span> <span class="proxy-color">proxying</span></h2>
+    <h2><span class="proxy-color">Proxying</span> <span class="php-color">Fluent Interfaces</span></h2>
 </section>
 
 <section>
@@ -1150,12 +1142,30 @@ Paid 300</code></pre>
 
 <section>
     <h2><span class="php-color">Public properties</span> <span class="proxy-color">proxying</span></h2>
-    <pre class="fragment"><code contenteditable>class Customer {
+    <p class="fragment">(without property accessors!)</p>
+</section>
+
+<section>
+    <pre><code contenteditable>class Customer {
     public $name;
     public $surname;
 }</code></pre>
 
-    <pre class="fragment"><code contenteditable>class CustomerProxy extends Customer {
+</section>
+
+<section>
+    <h2>Caution!</h2>
+    <p><img src="assets/img/caution-sign.svg" alt="caution!" width="40%"/></p>
+    <p>Dirty hacks!</p>
+</section>
+
+<section>
+    <pre><code contenteditable>class Customer {
+    public $name;
+    public $surname;
+}</code></pre>
+
+    <pre><code contenteditable>class CustomerProxy extends Customer {
     public function __construct(Customer $customer) {
         unset($this-&gt;name, $this-&gt;surname);
         $this-&gt;customer = $customer;
@@ -1168,10 +1178,19 @@ Paid 300</code></pre>
     public function __get($name) {
         return $this-&gt;customer-&gt;$name;
     }
-    // __isset, __unset, __clone, __sleep, __wakeup (or serialize/unserialize)
+
+    // __isset, __unset
 }</code></pre>
 </section>
 
+<section>
+    <h2>Don't do this at home!</h2>
+    <img src="assets/img/excel-saga-warning.png" alt="Excel Saga-style warning"/>
+</section>
+
+<section>
+    <h2>Thank you!</h2>
+</section>
 
 </div>
 </div>
