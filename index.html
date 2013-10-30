@@ -7,24 +7,71 @@
     <meta name="author" content="Marco Pivetta" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <link rel="stylesheet" href="reveal.js/css/reveal.min.css" />
-    <link rel="stylesheet" href="reveal.js/css/theme/default.css" id="theme" />
-    <link rel="stylesheet" href="reveal.js/lib/css/zenburn.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="bower_components/reveal.js/css/reveal.min.css">
+    <link rel="stylesheet" href="bower_components/reveal.js/css/theme/default.css" id="theme">
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="bower_components/reveal.js/lib/css/zenburn.css" id="highlight-theme">
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
     <script>
-        document.write(
-            '<link rel="stylesheet" href="reveal.js/css/print/'
-            + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' )
-            + '.css" type="text/css" media="print">'
-        );
+        document.write( '<link rel="stylesheet" href="bower_components/reveal.js/css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
     </script>
-    <!--[if lt IE 9]><script src="reveal.js/lib/js/html5shiv.js"></script><![endif]-->
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
     <link rel="stylesheet" href="assets/style.css" />
+
+    <style type="text/css">
+        /* overrides */
+        /*body {
+            background: #040E27;
+            background: -moz-radial-gradient(center, circle cover, #555a5f 0%, #040E27 100%);
+            background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #555a5f), color-stop(100%, #040E27));
+            background: -webkit-radial-gradient(center, circle cover, #555a5f 0%, #040E27 100%);
+            background: -o-radial-gradient(center, circle cover, #555a5f 0%, #040E27 100%);
+            background: -ms-radial-gradient(center, circle cover, #555a5f 0%, #040E27 100%);
+            background: radial-gradient(center, circle cover, #555a5f 0%, #040E27 100%);
+            background-color: #040E27;
+        }*/
+
+        .zf-color {
+            color: #68B604;
+        }
+
+        .doctrine-color {
+            color: #FC6A31;
+        }
+
+        .doctrine-bg {
+            background-color: #040E27;
+        }
+
+        .reveal section img {
+            border: 0;
+            background: none;
+            box-shadow: 0 0 #000;
+        }
+
+        .reveal pre {
+            width: 100%;
+            font-size: 0.68em;
+        }
+
+        .reveal pre code {
+            max-height: 600px;
+        }
+    </style>
 </head>
 <body>
 <div class="reveal">
 <div class="slides">
 
 <section style="visibility:hidden;"></section>
+<section>
+    <h1>
+        Hello!
+    </h1>
+</section>
 <section>
     <h2>
         <img src="assets/img/ocramius.gif" alt="Marco Pivetta" style="height: 70px; margin: 0;"/>
@@ -36,6 +83,45 @@
         <img src="assets/img/ocramius.gif" alt="Marco Pivetta" style="height: 70px; margin: 0;"/>
         <a href="http://ocramius.github.com/" target="_blank">Ocramius</a>
     </h2>
+</section>
+<section>
+    <img src="assets/img/roave-logo.png" alt="Roave"/>
+    <p class="fragment">
+        <a href="https://github.com/EvanDotPro">
+            <img src="http://www.gravatar.com/avatar/3fb997938a45ac4ea89a90164931368d?s=70&d=mm&r=g" alt="Evan Coury (EvanDotPro)"/>
+        </a>
+        <a href="https://github.com/TheFrozenFire">
+            <img src="http://www.gravatar.com/avatar/f9c4bcbe0990d74fbf2043602ec1a60d?s=70&d=mm&r=g" alt="Justin Martin (FrozenFire)"/>
+        </a>
+        <a href="https://github.com/DASPRiD">
+            <img src="http://www.gravatar.com/avatar/c9e618a09b7a872be9376b099b688eda?s=70&d=mm&r=g" alt="Ben Scholzen (DASPRiD)"/>
+        </a>
+        <a href="https://github.com/Ocramius">
+            <img src="http://www.gravatar.com/avatar/879d7c8ea365a31443e6b890f68a7d7d?s=70&d=mm&r=g" alt="Marco Pivetta (Ocramius)"/>
+        </a>
+        <a href="https://github.com/Akrabat">
+            <img src="http://www.gravatar.com/avatar/10e8bec5942c84bf30bcb5af7494f44a?s=70&d=mm&r=g" alt="Rob Allen (Akrabat), Nineteen Feet)"/>
+        </a>
+        <a href="https://github.com/nclundsten">
+            <img src="http://www.gravatar.com/avatar/816760c449322bb88a02cea027c857ab?s=70&d=mm&r=g" alt="Nigel Lundsten (nlundsten)"/>
+        </a>
+        <a href="https://github.com/Xerkus">
+            <img src="http://www.gravatar.com/avatar/4f7157a6ccf330bc161b126da934cefe?s=70&d=mm&r=g" alt="Aleksey Khudyakov (Xerkus)"/>
+        </a>
+        <a href="https://github.com/Spabby">
+            <img src="http://www.gravatar.com/avatar/e61ae7dfad370ba47a72f79418160f51?s=70&d=mm&r=g" alt="Gary Hockin (Spabby / GeeH)"/>
+        </a>
+        <img src="http://www.gravatar.com/avatar/8b228094f53356cb826741cc40a01cd6?s=70&d=mm&r=g" alt="Priscilla Hubbard"/>
+        <img src="http://www.gravatar.com/avatar/44e4328250ce6d98d5384c3c1fcd0274?s=70&d=mm&r=g" alt="Chloe"/>
+    </p>
+    <p class="fragment">
+        <marquee>We're awesome!</marquee>
+    </p>
+    <p class="fragment">(And we love &lt;marquee/&gt;)</p>
+</section>
+<section>
+    <h2>Awesome:</h2>
+    <img src="assets/img/awesome-moose.gif" alt="Definition of Awesome" style="width: 100%"/>
 </section>
 <section>
     <h2>
@@ -100,7 +186,7 @@
     <h1>WHY?</h1>
 </section>
 <section>
-    <img src="assets/img/for-the-glory-of-satan.jpg" alt="For the glory of satan, of course!"/>
+    <img src="assets/img/for-the-glory-of-satan.jpg" alt="For the glory of satan, of course!" style="width: 60%"/>
 </section>
 
 <section>
@@ -127,13 +213,13 @@
     <h1>Simple put</h1>
 </section>
 <section>
-    <img src="assets/img/deer.png" alt="Deer"/>
+    <img src="assets/img/deer.png" alt="Deer" style="width: 100%"/>
 </section>
 <section>
-    <img src="assets/img/nope.png" alt="Nope"/>
+    <img src="assets/img/nope.png" alt="Nope" style="width: 100%"/>
 </section>
 <section>
-    <img src="assets/img/chuck-testa.png" alt="Chuck Testa!"/>
+    <img src="assets/img/chuck-testa.png" alt="Chuck Testa!" style="width: 100%"/>
 </section>
 
 
@@ -154,6 +240,7 @@
     <img
         alt="A Proxy implements the same interface as of a real subject"
         src="http://yuml.me/diagram/dir:TB;scale:180;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:blue}], [<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}].svg"
+        style="width: 100%;"
     />
 </section>
 <section>
@@ -164,6 +251,7 @@
     <img
         alt="A Client uses the SubjectInterface"
         src="http://yuml.me/diagram/dir:TB;scale:180;/class/[<<SubjectInterface>>]<-.-consumes [Client{bg:green}].svg"
+        style="width: 100%"
     />
 </section>
 <section>
@@ -174,6 +262,7 @@
     <img
         alt="A Client uses the RealSubject"
         src="http://yuml.me/diagram/dir:TB;scale:120;/class/[<<SubjectInterface>>]^-.-implements [RealSubject{bg:blue}], [RealSubject{bg:blue}]<-.-consumes [Client{bg:green}].svg"
+        style="width: 100%"
     />
 </section>
 <section>
@@ -183,7 +272,8 @@
 <section data-state="soothe">
     <img
         alt="A Client uses the SubjectProxy"
-        src="http://yuml.me/diagram/dir:TB;scale:120;/class/[<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [SubjectProxy{bg:orange}]<-.-consumes [Client{bg:green}].svg"
+        src="http://yuml.me/diagram/dir:TB;scale:180;/class/[<<SubjectInterface>>]^-.-implements [SubjectProxy{bg:orange}], [SubjectProxy{bg:orange}]<-.-consumes [Client{bg:green}].svg"
+        style="width: 100%"
     />
 </section>
 
@@ -200,6 +290,7 @@
         <img
             alt="ProxySubject extends the RealSubject"
             src="http://yuml.me/diagram/dir:TB;scale:160;/class/[RealSubject{bg:blue}]^-extends [SubjectProxy{bg:orange}].svg"
+            style="width: 100%"
         />
     </p>
 
@@ -215,6 +306,23 @@
 
 <section>
     <h2>What do <span class="proxy-color">Proxies</span> do?</h2>
+</section>
+
+<section>
+    <p>Some definitions here:</p>
+    <img src="assets/img/POEAA.jpg" alt="PoEAA"/>
+</section>
+
+<section>
+    <p>And here:</p>
+    <img
+        src="assets/img/Design-Patterns-Elements-of-Reusable-Object-Oriented-Software.jpg"
+        alt="Design Patterns Elements of Reusable Object Oriented Software"
+    />
+</section>
+
+<section>
+    <p>And a lot of confusion over the internets :(</p>
 </section>
 
 <section>
@@ -238,7 +346,15 @@
 
 <section>
     <h2>I'm a software architect</h2>
-    <img class="fragment" src="assets/img/i-have-no-idea-what-i-m-doing.jpg" alt="I have no idea what I'm doing" />
+    <img
+        class="fragment"
+        src="assets/img/i-have-no-idea-what-i-m-doing.png" alt="I have no idea what I'm doing"
+        style="width: 80%;"
+    />
+</section>
+
+<section>
+    <h2>Let's get practical!</h2>
 </section>
 
 <section>
@@ -249,6 +365,7 @@
     <img
         alt="Remote Object Proxy UML"
         src="http://yuml.me/diagram/plain;dir:LR;scale:140;/class/[RealSubject{bg:blue}]intertubes-intertubes[SubjectProxy{bg:orange}].svg"
+        style="width: 100%;"
     />
 </section>
 
@@ -256,6 +373,7 @@
     <img
         alt="Remote Object Proxy UML"
         src="http://yuml.me/diagram/plain;dir:LR;scale:180;/class/[RealSubject{bg:blue}]<-.- uses[AdapterServer{bg:green}],[AdapterServer{bg:green}]intertubes-intertubes[AdapterClient{bg:green}],[AdapterClient{bg:green}]<-.- uses[SubjectProxy{bg:orange}].svg"
+        style="width: 100%;"
     />
 </section>
 
@@ -268,11 +386,11 @@
     protected $data;
 
     public function __construct(array $data) {
-        $this->data = $data;
+        $this-&gt;data = $data;
     }
 
     public function getText() {
-        return $this->data['text'];
+        return $this-&gt;data['text'];
     }
 }</code></pre>
 </section>
@@ -283,27 +401,27 @@
     protected $id;
 
     public function __construct(TwitterApi $api, $id) {
-        $this->api = $api;
-        $this->id  = $id;
+        $this-&gt;api = $api;
+        $this-&gt;id  = $id;
     }
 
     public function getText() {
-        return $this->api->getTweetText($this->id);
+        return $this-&gt;api-&gt;getTweetText($this-&gt;id);
     }
 }</code></pre>
 </section>
 
 <section>
     <pre><code contenteditable>$tweet = new Tweet(array('text' => 'Proxies in PHP!'));
-var_dump($tweet->getText()); // Proxies in PHP!
+var_dump($tweet-&gt;getText()); // Proxies in PHP!
 
 $api = new TwitterApi(/* yadda */);
 
 $remoteTweet = new TweetProxy($api, 280643708968386560);
-var_dump($remoteTweet->getText()); // Tweet text!
+var_dump($remoteTweet-&gt;getText()); // Tweet text!
 
 $remoteTweet = new TweetProxy($api, 280643708968386561);
-var_dump($remoteTweet->getText()); // Another text!</code></pre>
+var_dump($remoteTweet-&gt;getText()); // Another text!</code></pre>
 </section>
 
 <section>
@@ -338,18 +456,18 @@ var_dump($remoteTweet->getText()); // Another text!</code></pre>
 <section>
     <pre><code contenteditable>class Customer {
     public function __construct(DbConnection $db, $id) {
-        $this->db = $db;
-        $this->id = $id;
+        $this-&gt;db = $db;
+        $this-&gt;id = $id;
     }
 
     public function getName() {
-        $this->init();
-        return $this->data['name'];
+        $this-&gt;init();
+        return $this-&gt;data['name'];
     }
 
     private function init() {
-        if (!isset($this->data)) {
-            $this->data = $this->db->load($this->id);
+        if (!isset($this-&gt;data)) {
+            $this-&gt;data = $this-&gt;db-&gt;load($this-&gt;id);
         }
     }
 }</code></pre>
@@ -395,13 +513,13 @@ var_dump($remoteTweet->getText()); // Another text!</code></pre>
     <pre><code contenteditable>class Image {
     protected $image;
     public function __construct($path) {
-        $this->image = imagecreatefromjpeg($path);
+        $this-&gt;image = imagecreatefromjpeg($path);
     }
 
     public function getSize() {
         return array(
-            imagesx($this->image),
-            imagesy($this->image),
+            imagesx($this-&gt;image),
+            imagesy($this-&gt;image),
         );
     }
 }</code></pre>
@@ -411,17 +529,17 @@ var_dump($remoteTweet->getText()); // Another text!</code></pre>
     <pre><code contenteditable>class ImageVirtualProxy extends Image {
     protected $wrapped;
     public function __construct($path) {
-        $this->path = $path;
+        $this-&gt;path = $path;
     }
 
     public function getSize() {
-        $this->init();
-        return $this->wrapped->getSize();
+        $this-&gt;init();
+        return $this-&gt;wrapped-&gt;getSize();
     }
 
     private function init() {
-        if ( ! $this->wrapped) {
-            $this->wrapped = new Image($this->path);
+        if ( ! $this-&gt;wrapped) {
+            $this-&gt;wrapped = new Image($this-&gt;path);
         }
     }
 }</code></pre>
@@ -435,9 +553,9 @@ var_dump(memory_get_usage()); // ~200Kb
 $img3 = new ImageProxy('/path/to/image3.jpg');
 var_dump(memory_get_usage()); // ~200Kb
 
-$size1 = $img1->getSize();
+$size1 = $img1-&gt;getSize();
 var_dump(memory_get_usage()); // ~4Mb
-$size2 = $img2->getSize();
+$size2 = $img2-&gt;getSize();
 var_dump(memory_get_usage()); // ~8Mb</code></pre>
 </section>
 
@@ -474,17 +592,17 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
     <pre><code contenteditable>class ImageGhostProxy extends Image {
     protected $initialized = false;
     public function __construct($path) {
-        $this->path = $path;
+        $this-&gt;path = $path;
     }
     public function getSize() {
-        $this->init();
+        $this-&gt;init();
         return parent::getSize();
     }
     private function init() {
-        if ( ! $this->initialized) {
-            $image             = new Image($this->path);
-            $this->image       = $image->image;
-            $this->initialized = true;
+        if ( ! $this-&gt;initialized) {
+            $image             = new Image($this-&gt;path);
+            $this-&gt;image       = $image-&gt;image;
+            $this-&gt;initialized = true;
         }
     }
 }</code></pre>
@@ -518,16 +636,16 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
     <pre><code contenteditable>class APIProtectionProxy extends API {
     protected $count = 0;
     public function __construct(API $api, $limit) {
-        $this->api = $api; $this->limit = $limit;
+        $this-&gt;api = $api; $this-&gt;limit = $limit;
     }
 
     public function doStuff() {
-        $this->count();
-        return $this->api->doStuff();
+        $this-&gt;count();
+        return $this-&gt;api-&gt;doStuff();
     }
 
     private function count() {
-        if (++$this->count > $this->limit) {
+        if (++$this-&gt;count > $this-&gt;limit) {
             throw new RemoteApiLimit('STAHP!');
         }
     }
@@ -538,7 +656,7 @@ var_dump(memory_get_usage()); // ~8Mb</code></pre>
     <pre><code contenteditable>$api = new APIProtectionProxy(new API(/* ... */), 50);
 
 while (true) {
-    $api->doStuff(); // RemoteApiLimit exception!
+    $api-&gt;doStuff(); // RemoteApiLimit exception!
 }</code></pre>
 </section>
 
@@ -576,26 +694,24 @@ while (true) {
 </section>
 
 <section>
-    <pre class="fragment"><code contenteditable>    /**
-     * @AOP\Cache(ttl=3600)
-     */
+    <pre><code contenteditable>    /** @AOP\Cache(ttl=3600) */
     public function doHeavyStuff() {
         // [...]
     }</code></pre>
     <p class="fragment">Could become:</p>
     <pre class="fragment"><code contenteditable>class APICachingProxy extends API {
     public function __construct(API $api, Cache $cache) {
-        $this->api = $api; $this->cache = $cache;
+        $this-&gt;api = $api; $this-&gt;cache = $cache;
     }
 
     public function doHeavyStuff() {
-        if ($cached = $this->cache->get('doHeavyStuff')) {
+        if ($cached = $this-&gt;cache-&gt;get('doHeavyStuff')) {
             return $cached;
         }
 
-        $result = $this->api->doHeavyStuff();
+        $result = $this-&gt;api-&gt;doHeavyStuff();
 
-        $this->cache->set('doHeavyStuff', $result, 3600);
+        $this-&gt;cache-&gt;set('doHeavyStuff', $result, 3600);
 
         return $result;
     }
@@ -613,7 +729,7 @@ while (true) {
 
     public function __call($method, $args) {
         return call_user_func_array(
-            $this->someWrappedStuff,
+            $this-&gt;someWrappedStuff,
             $args
         );
     }
@@ -621,15 +737,55 @@ while (true) {
 </section>
 
 <section>
-    <img src="assets/img/nooooo-darth-vader.jpg" alt="don't do it!"/>
+    <img src="assets/img/nooooo-darth-vader.jpg" alt="don't do it!" width="100%"/>
 </section>
 
 <section>
-    <h2>Implementing a (generic) <span class="proxy-color">Proxy</span></h2>
-    <ol>
-        <li><span class="php-color">MUST</span> respect the LSP!</li>
-        <li>Not so trivial!</li>
-    </ol>
+    <pre><code contenteditable>class BankAccount { /* ... */ }</code></pre>
+    <pre class="fragment"><code contenteditable>function pay(BankAccount $account) { /* ... */ }</code></pre>
+    <pre class="fragment"><code contenteditable>class PoorProxy {
+    public function __construct($wrapped) {
+        $this-&gt;wrapped = $wrapped;
+    }
+
+    public function __call($method, $args) {
+        return call_user_func_array(
+            $this-&gt;wrapped,
+            $args
+        );
+    }
+}</code></pre>
+<pre class="fragment"><code contenteditable>$account = new PoorProxy(new BankAccount());
+
+pay($account); // KABOOM!</code></pre>
+</section>
+
+<section>
+    <h2>Implementing a<br/>(generic) <span class="proxy-color">Proxy</span></h2>
+</section>
+
+<section>
+    <h2>1. <span class="php-color">MUST</span> respect the LSP!</h2>
+</section>
+
+<section>
+    <h2>2. Not so trivial!</h2>
+</section>
+
+<section>
+    <h2><span class="php-color">PHP</span> is a maze!</h2>
+
+    <ul>
+        <li class="fragment">magic getters</li>
+        <li class="fragment">magic setters</li>
+        <li class="fragment">serialization</li>
+        <li class="fragment">cloning</li>
+        <li class="fragment">public properties</li>
+    </ul>
+</section>
+
+<section>
+    <h2>A lot of stuff to consider!</h2>
 </section>
 
 <section>
@@ -644,88 +800,88 @@ class A extends \A
 
     public function getFoo()
     {
-        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, 'getFoo', array(), $this->initializer);
+        $this-&gt;initializer && $this-&gt;initializer-&gt;__invoke($this-&gt;valueHolder, $this, 'getFoo', array(), $this-&gt;initializer);
 
-        return $this->valueHolder->getFoo();
+        return $this-&gt;valueHolder-&gt;getFoo();
     }
 
     public function __construct($initializer)
     {
-        unset($this->foo);
+        unset($this-&gt;foo);
 
-        $this->initializer = $initializer;
+        $this-&gt;initializer = $initializer;
     }
 
     public function __get($name)
     {
-        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__get', array('name' => $name), $this->initializer);
+        $this-&gt;initializer && $this-&gt;initializer-&gt;__invoke($this-&gt;valueHolder, $this, '__get', array('name' => $name), $this-&gt;initializer);
 
-        return $this->valueHolder->$name;
+        return $this-&gt;valueHolder-&gt;$name;
     }
 
     public function __set($name, $value)
     {
-        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__set', array('name' => $name, 'value' => $value), $this->initializer);
+        $this-&gt;initializer && $this-&gt;initializer-&gt;__invoke($this-&gt;valueHolder, $this, '__set', array('name' => $name, 'value' => $value), $this-&gt;initializer);
 
-        $this->valueHolder->$name = $value;
+        $this-&gt;valueHolder-&gt;$name = $value;
     }
 
     public function __isset($name)
     {
-        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__isset', array('name' => $name), $this->initializer);
+        $this-&gt;initializer && $this-&gt;initializer-&gt;__invoke($this-&gt;valueHolder, $this, '__isset', array('name' => $name), $this-&gt;initializer);
 
-        return isset($this->valueHolder->$name);
+        return isset($this-&gt;valueHolder-&gt;$name);
     }
 
     public function __unset($name)
     {
-        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__unset', array('name' => $name), $this->initializer);
+        $this-&gt;initializer && $this-&gt;initializer-&gt;__invoke($this-&gt;valueHolder, $this, '__unset', array('name' => $name), $this-&gt;initializer);
 
-        unset($this->valueHolder->$name);
+        unset($this-&gt;valueHolder-&gt;$name);
     }
 
     public function __clone()
     {
-        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__clone', array(), $this->initializer);
+        $this-&gt;initializer && $this-&gt;initializer-&gt;__invoke($this-&gt;valueHolder, $this, '__clone', array(), $this-&gt;initializer);
 
-        $this->valueHolder = clone $this->valueHolder;
+        $this-&gt;valueHolder = clone $this-&gt;valueHolder;
     }
 
     public function __sleep()
     {
-        $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, '__sleep', array(), $this->initializer);
+        $this-&gt;initializer && $this-&gt;initializer-&gt;__invoke($this-&gt;valueHolder, $this, '__sleep', array(), $this-&gt;initializer);
 
         return array('valueHolder');
     }
 
     public function __wakeup()
     {
-        unset($this->foo);
+        unset($this-&gt;foo);
     }
 
     public function setProxyInitializer(\Closure $initializer = null)
     {
-        $this->initializer = $initializer;
+        $this-&gt;initializer = $initializer;
     }
 
     public function getProxyInitializer()
     {
-        return $this->initializer;
+        return $this-&gt;initializer;
     }
 
     public function initializeProxy()
     {
-        return $this->initializer && $this->initializer->__invoke($this->valueHolder, $this, 'initializeProxy', array(), $this->initializer);
+        return $this-&gt;initializer && $this-&gt;initializer-&gt;__invoke($this-&gt;valueHolder, $this, 'initializeProxy', array(), $this-&gt;initializer);
     }
 
     public function isProxyInitialized()
     {
-        return null !== $this->valueHolder;
+        return null !== $this-&gt;valueHolder;
     }
 
     public function getWrappedValueHolderValue()
         {
-        return $this->valueHolder;
+        return $this-&gt;valueHolder;
     }
 }</code></pre>
 </section>
@@ -747,14 +903,12 @@ class A extends \A
     <p>Avoid bringing out the generated garbage yourself!</p>
     <p>
         (Currently) deals with
-        <span class="proxy-color">Virtual Proxy</span>,
-        <span class="proxy-color">Smart Reference</span> and
-        <span class="proxy-color">Ghost Objects</span>
+        <span class="proxy-color">Virtual Proxies</span>,
+        <span class="proxy-color">Smart References</span>,
+        <span class="proxy-color">Null Objects</span>,
+        <span class="proxy-color">Ghost Objects</span> and
+        <span class="proxy-color">Remote Objects</span>
     </p>
-</section>
-
-<section>
-    <p>Integrated in <span class="php-color">Symfony2</span> and <span class="zf-color">Zend Framework 2</span></p>
 </section>
 
 <section>
@@ -782,18 +936,18 @@ class Foo
     <pre><code contenteditable>require_once 'vendor/autoload.php';
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 
-$config  = new ProxyManager\Configuration();
-$factory = new LazyLoadingValueHolderFactory($config);
+$factory = new LazyLoadingValueHolderFactory();
 
-$proxy = $factory->createProxy(
+$proxy = $factory-&gt;createProxy(
     'My\Slow\Foo',
     function (& $wrappedObject, $proxy) {
-        $wrappedObject = new My\Slow\Foo();
-        $proxy->setProxyInitializer(null);
+        $wrappedObject = new My\Slow\Object();
+
+        $proxy-&gt;setProxyInitializer(null);
     }
 );
 
-$proxy->doFoo();</code></pre>
+$proxy-&gt;doFoo();</code></pre>
 </section>
 
 <section>
@@ -803,24 +957,35 @@ $proxy->doFoo();</code></pre>
     <pre><code contenteditable>require_once 'vendor/autoload.php';
 use ProxyManager\Factory\AccessInterceptorValueHolderFactory;
 
-$config  = new ProxyManager\Configuration();
-$factory = new AccessInterceptorValueHolderFactory($config);
-$db = $factory->createProxy(
+$factory = new AccessInterceptorValueHolderFactory();
+$db = $factory-&gt;createProxy(
     new \My\Db\Connection(),
-    array('query' => function () {
+    ['query' => function () {
         echo "Query being executed!\n";
-    }),
-    array('query' => function () {
+    }],
+    ['query' => function () {
         echo "Query completed!\n";
-    })
+    }]
 );
 
-$db->query();</code></pre>
+$db-&gt;query();</code></pre>
     <p class="fragment">Yes, I'm no good at naming classes - really.</p>
 </section>
 
 <section>
-    <h2><span class="proxy-color">Virtual Proxies</span> + <span class="zf-color">Zend Framework 2</span></h2>
+    <h2>
+        Integrates with
+        <br/>
+        <span class="php-color">Symfony2</span>
+        <br/>
+        and
+        <br/>
+        <span class="zf-color">Zend Framework 2</span>
+    </h2>
+</section>
+
+<section>
+    <h2><span class="proxy-color">Virtual (Service) Proxies</span> + <span class="zf-color">Zend Framework 2</span></h2>
     <pre><code contenteditable>return [
     'service_manager' =&gt; [
         'delegators' =&gt; [
@@ -834,7 +999,7 @@ $db->query();</code></pre>
 </section>
 
 <section>
-        <h2><span class="proxy-color">Virtual Proxies</span> + <span class="php-color">Symfony 2</span></h2>
+    <h2><span class="proxy-color">Virtual (Service) Proxies</span> + <span class="php-color">Symfony 2</span></h2>
 <pre><code contenteditable>&lt;services&gt;
     &lt;service
         id="MyServiceName"
@@ -879,29 +1044,30 @@ $db->query();</code></pre>
 </section>
 
 <section>
-    <h2>Questions?</h2>
+    <p>And before we get to the dirty stuff...</p>
 </section>
 
 <section>
-    <h2>Thank you!</h2>
+    <h2>Questions?</h2>
     <p>
-	    Slides at 
-	    <a href="http://marco-pivetta.com/proxy-pattern-in-php/" target="_blank">
-		    marco-pivetta.com/proxy-pattern-in-php/
-	    </a>
-	</p>
-    <p>
-        Fork the slides!
-        <br/>
         <img
-            src="assets/img/gh.svg"
-            alt="Ocramius on Github"
-            height="40px"
+            src="http://chart.apis.google.com/chart?chs=400x400&cht=qr&chl=https%3A%2F%2Fjoind.in%2F%2F9555"
+            alt="Rate this talk"
             style="margin: 0;"
         />
-        <a href="https://github.com/Ocramius/proxy-pattern-in-php" target="_blank">
-            Ocramius/proxy-pattern-in-php
+    </p>
+    <p>
+        <a href="https://joind.in/9555" target="_blank">https://joind.in/9555</a>
+    <p>
+        <a href="https://github.com/Ocramius">
+            <img
+                src="assets/img/gh.svg"
+                alt="Ocramius on Github"
+                height="40px"
+                style="margin: 0;"
+            />
         </a>
+        <a href="https://github.com/Ocramius/proxy-pattern-in-php" target="_blank">Ocramius/proxy-pattern-in-php</a>
     </p>
     <p>
         <img
@@ -920,39 +1086,148 @@ $db->query();</code></pre>
     </p>
 </section>
 
+<section>
+    <h2><span class="proxy-color">Proxying</span> <span class="php-color">Fluent Interfaces</span></h2>
+</section>
+
+<section>
+    <p>
+        Breaks <span class="proxy-color">Virtual Proxies</span>,
+        <span class="proxy-color">Protection Proxies</span>, and
+        <span class="proxy-color">Smart References</span>
+    </p>
+</section>
+
+<section>
+    <p>More important:</p>
+</section>
+
+<section>
+    <h2>Possible broken <span class="php-color">Encapsulation</span>!</h2>
+</section>
+
+<section>
+    <pre><code contenteditable>class BankAccount {
+    protected $amount = 0;
+
+    public function pay($amount) {
+        $this-&gt;amount -= $amount;
+
+        return $this;
+    }
+}</code></pre>
+    <pre class="fragment"><code contenteditable>$account = new BankAccount();
+
+$account-&gt;pay(100)-&gt;pay(200)-&gt;pay(300);
+</code></pre>
+</section>
+
+<section>
+    <h2>Caution!</h2>
+    <p><img src="assets/img/caution-sign.svg" alt="caution!" width="40%"/></p>
+    <p>Dirty hacks!</p>
+</section>
+
+<section>
+    <pre><code contenteditable>class BankAccountProxy extends BankAccount {
+    public function __construct(BankAccount $wrapped) {
+        $this-&gt;amount = & $wrapped-&gt;amount;
+    }
+
+    public function pay($amount) {
+        echo 'Paid ' . $amount . "!\n";
+
+        return parent::pay($amount);
+    }
+}</code></pre>
+    <pre class="fragment"><code contenteditable>$account = new BankAccountProxy(new BankAccount());
+
+$account-&gt;pay(100)-&gt;pay(200)-&gt;pay(300);
+</code></pre>
+    <pre class="fragment"><code contenteditable>Paid 100
+Paid 200
+Paid 300</code></pre>
+</section>
 
 <section>
     <h2><span class="php-color">Public properties</span> <span class="proxy-color">proxying</span></h2>
-    <pre class="fragment"><code contenteditable>class Customer {
+    <p class="fragment">(without property accessors!)</p>
+</section>
+
+<section>
+    <pre><code contenteditable>class Customer {
     public $name;
     public $surname;
 }</code></pre>
 
-    <pre class="fragment"><code contenteditable>class CustomerProxy extends Customer {
+</section>
+
+<section>
+    <h2>Caution!</h2>
+    <p><img src="assets/img/caution-sign.svg" alt="caution!" width="40%"/></p>
+    <p>Dirty hacks!</p>
+</section>
+
+<section>
+    <pre><code contenteditable>class Customer {
+    public $name;
+    public $surname;
+}</code></pre>
+
+    <pre><code contenteditable>class CustomerProxy extends Customer {
     public function __construct(Customer $customer) {
-        unset($this->name, $this->surname);
-        $this->customer = $customer;
+        unset($this-&gt;name, $this-&gt;surname);
+        $this-&gt;customer = $customer;
     }</code></pre>
 	
     <pre class="fragment"><code contenteditable>    public function __set($name, $value) {
-        $this->customer->$name = $value;
+        $this-&gt;customer-&gt;$name = $value;
     }
 
     public function __get($name) {
-        return $this->customer->$name;
+        return $this-&gt;customer-&gt;$name;
     }
-    // __isset, __unset, __clone, __sleep, __wakeup (or serialize/unserialize)
+
+    // __isset, __unset
 }</code></pre>
 </section>
 
+<section>
+    <h2>Don't do this at home!</h2>
+    <img src="assets/img/excel-saga-warning.png" alt="Excel Saga-style warning"/>
+</section>
+
+<section>
+    <h2>Thank you!</h2>
+    <p>
+        <img
+            src="http://chart.apis.google.com/chart?chs=400x400&cht=qr&chl=https%3A%2F%2Fjoind.in%2F%2F9555"
+            alt="Rate this talk"
+            style="margin: 0;"
+        />
+    </p>
+    <p>
+        <a href="https://joind.in/9555" target="_blank">https://joind.in/9555</a>
+    <p>
+        <a href="https://github.com/Ocramius">
+            <img
+                src="assets/img/gh.svg"
+                alt="Ocramius on Github"
+                height="40px"
+                style="margin: 0;"
+            />
+        </a>
+        <a href="https://github.com/Ocramius/proxy-pattern-in-php" target="_blank">Ocramius/proxy-pattern-in-php</a>
+    </p>
+</section>
 
 </div>
 </div>
 
-<script src="reveal.js/lib/js/head.min.js"></script>
-<script src="reveal.js/js/reveal.min.js"></script>
+<script src="bower_components/reveal.js/lib/js/head.min.js"></script>
+<script src="bower_components/reveal.js/js/reveal.min.js"></script>
 <script>
-
+    // Configure Reveal
     // Full list of configuration options available here:
     // https://github.com/hakimel/reveal.js#configuration
     Reveal.initialize({
@@ -962,21 +1237,24 @@ $db->query();</code></pre>
         center: true,
 
         theme: Reveal.getQueryHash().theme || 'sky', // available themes are in /css/theme
-        transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/none
+        transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/fade/none
 
         // Optional libraries used to extend on reveal.js
         dependencies: [
-            { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
-            { src: 'reveal.js/plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-            { src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
-            { src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
-            { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
-            { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
-            // { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+            { src: 'bower_components/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+            { src: 'bower_components/reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'bower_components/reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+            { src: 'bower_components/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+            { src: 'bower_components/reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+            { src: 'bower_components/reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+            // { src: 'plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; } }
+            //{ src: 'bower_components/reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+
+            { src: 'js/loadhtmlslides.js', condition: function() { return !!document.querySelector( '[data-html]' ); } }
         ]
     });
-
 </script>
+
 <script type="text/javascript">
 
     var _gaq = _gaq || [];
