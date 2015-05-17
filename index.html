@@ -941,7 +941,7 @@ $factory = new LazyLoadingValueHolderFactory();
 $proxy = $factory-&gt;createProxy(
     'My\Slow\Foo',
     function (& $wrappedObject, $proxy) {
-        $wrappedObject = new My\Slow\Object();
+        $wrappedObject = new My\Slow\Foo();
 
         $proxy-&gt;setProxyInitializer(null);
     }
